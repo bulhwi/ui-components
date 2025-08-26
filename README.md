@@ -101,11 +101,12 @@ function App() {
 | **Button** | 다용도 버튼 | 4가지 변형, 로딩 상태, 아이콘 | 11개 테스트 ✅ |
 | **Input** | 입력 필드 + 검증 | 7가지 타입, 실시간 검증, 에러 처리 | 31개 테스트 ✅ |
 | **Modal** | 모달 다이얼로그 | Portal, 4가지 애니메이션, 접근성 | 29개 테스트 ✅ |
-| **Header** | 페이지 헤더 | 반응형 네비게이션, 스티키, 모바일 메뉴 | 24개 테스트 ✅ |
-| **Footer** | 페이지 푸터 | 다단 레이아웃, 소셜 링크, 저작권 | (Header 테스트에 포함) |
-| **Layout** | 레이아웃 래퍼 | Header+Main+Footer 구조 | (Header 테스트에 포함) |
+| **Layout** | 페이지 레이아웃 | Header+Footer+Main, 반응형, 스티키 | 24개 테스트 ✅ |
+| **Table** | 데이터 테이블 | 정렬, 필터링, 페이지네이션, 행 선택 | 23개 테스트 ✅ |
+| **Card** | 콘텐츠 카드 | 변형, 이미지, 인터랙션, 그리드 레이아웃 | 39개 테스트 ✅ |
+| **LoadingSpinner** | 로딩 스피너 | 4가지 애니메이션, 오버레이, 그룹 | 40개 테스트 ✅ |
 
-**총 95개+ 단위 테스트** 🎉
+**총 197개+ 단위 테스트** 🎉
 
 ## 📚 주요 기능
 
@@ -268,9 +269,11 @@ npm run test:coverage
 
 ## 📖 문서
 
-- **Storybook**: `npm run storybook` → http://localhost:6006
-- **컴포넌트 API**: 각 컴포넌트 폴더의 `types.ts` 참조
-- **사용 예시**: `.stories.tsx` 파일들
+- 📖 **[상세 사용 가이드](./docs/USAGE_GUIDE.md)** - 완벽한 사용법과 실용 예시
+- 🔖 **[API 문서](./docs/COMPONENT_API_REFERENCE.md)** - 모든 컴포넌트 Props 및 타입
+- ⚡ **[빠른 시작](./docs/QUICK_START.md)** - 5분 내 설정 완료
+- 🎨 **Storybook**: `npm run storybook` → http://localhost:6006
+- 🧪 **테스트 커버리지**: `npm run test:coverage`
 
 ## 🎯 로드맵 현황
 
@@ -286,12 +289,16 @@ npm run test:coverage
 - ✅ **Input**: 7가지 타입, 실시간 검증, 31개 테스트  
 - ✅ **Modal**: Portal, 4가지 애니메이션, 접근성, 29개 테스트
 - ✅ **Layout**: Header, Footer, 반응형, 24개 테스트
-- ✅ **테마**: Light/Dark 모드
+- ✅ **Table**: 정렬, 필터링, 페이지네이션, 23개 테스트
+- ✅ **Card**: 다양한 변형, 이미지, 그리드, 39개 테스트
+- ✅ **LoadingSpinner**: 4가지 애니메이션, 오버레이, 40개 테스트
+- ✅ **테마**: Light/Dark 모드, lineHeights 지원
 - ✅ **검증**: 실시간 validation + 프리셋
 - ✅ **접근성**: ARIA 속성, 키보드 네비게이션
 - ✅ **i18n**: 기본 구조 (확장 가능)
-- ✅ **Storybook**: 32개+ 스토리
-- ✅ **테스트**: 95개+ 단위 테스트
+- ✅ **Storybook**: 50개+ 스토리
+- ✅ **테스트**: 197개+ 단위 테스트
+- ✅ **문서화**: 상세 가이드, API 문서, FAQ
 
 ## 🤝 기여하기
 

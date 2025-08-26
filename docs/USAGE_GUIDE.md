@@ -331,6 +331,445 @@ function App() {
 }
 ```
 
+## 📊 Table 컴포넌트
+
+### 기본 테이블
+```tsx
+import { Table } from 'mbsw-ui-kit';
+
+const columns = [
+  { 
+    key: 'name', 
+    title: '이름', 
+    width: 200,
+    sortable: true 
+  },
+  { 
+    key: 'email', 
+    title: '이메일', 
+    width: 300,
+    sortable: true 
+  },
+  { 
+    key: 'role', 
+    title: '역할', 
+    width: 150 
+  },
+  { 
+    key: 'status', 
+    title: '상태', 
+    width: 100,
+    render: (value: string) => (
+      <Badge color={value === 'active' ? 'success' : 'secondary'}>
+        {value === 'active' ? '활성' : '비활성'}
+      </Badge>
+    )
+  }
+];
+
+const data = [
+  { 
+    id: 1, 
+    name: '김철수', 
+    email: 'kim@example.com', 
+    role: '개발자', 
+    status: 'active' 
+  },
+  { 
+    id: 2, 
+    name: '이영희', 
+    email: 'lee@example.com', 
+    role: '디자이너', 
+    status: 'inactive' 
+  },
+];
+
+<Table 
+  columns={columns}
+  data={data}
+  loading={false}
+  caption="사용자 목록"
+/>
+```
+
+### 고급 테이블 기능
+```tsx
+// 정렬, 필터링, 페이지네이션이 있는 테이블
+<Table
+  columns={columns}
+  data={data}
+  // 정렬 기능
+  sortable={true}
+  defaultSort={{ key: 'name', direction: 'asc' }}
+  onSort={(sortConfig) => console.log('정렬:', sortConfig)}
+  
+  // 필터링 기능
+  filterable={true}
+  searchPlaceholder="사용자 검색..."
+  onFilter={(filteredData) => console.log('필터된 데이터:', filteredData)}
+  
+  // 페이지네이션
+  pagination={{
+    enabled: true,
+    pageSize: 10,
+    showSizeChanger: true,
+    showInfo: true,
+    pageSizeOptions: [10, 20, 50, 100]
+  }}
+  
+  // 행 선택
+  selection={{
+    enabled: true,
+    type: 'multiple', // 'single' | 'multiple'
+    onSelectionChange: (selectedRows) => console.log('선택된 행:', selectedRows)
+  }}
+  
+  // 로딩 상태
+  loading={isLoading}
+  
+  // 빈 상태 커스터마이징
+  emptyState={{
+    message: '데이터가 없습니다',
+    action: <Button>데이터 추가</Button>
+  }}
+  
+  // 행 액션
+  onRowClick={(row) => console.log('행 클릭:', row)}
+  onRowDoubleClick={(row) => console.log('행 더블클릭:', row)}
+/>
+```
+
+### 반응형 테이블 (모바일)
+```tsx
+// 모바일에서 자동으로 카드 형태로 변환
+<Table
+  columns={columns}
+  data={data}
+  responsive={true}
+  mobileBreakpoint={768}
+  // 모바일에서 표시할 주요 필드들
+  mobileKeyFields={['name', 'email']}
+/>
+```
+
+### 테이블 액션 버튼
+```tsx
+const columnsWithActions = [
+  ...columns,
+  {
+    key: 'actions',
+    title: '액션',
+    width: 120,
+    render: (value: any, row: any) => (
+      <div style={{ display: 'flex', gap: '8px' }}>
+        <Button size="small" variant="secondary" onClick={() => handleEdit(row)}>
+          수정
+        </Button>
+        <Button size="small" variant="danger" onClick={() => handleDelete(row)}>
+          삭제
+        </Button>
+      </div>
+    )
+  }
+];
+```
+
+## 🃏 Card 컴포넌트
+
+### 기본 카드
+```tsx
+import { Card, CardContent, CardActions, Button } from 'mbsw-ui-kit';
+
+// 단순한 카드
+<Card>
+  <CardContent>
+    <h3>기본 카드</h3>
+    <p>카드 내용입니다.</p>
+  </CardContent>
+</Card>
+
+// 헤더와 액션이 있는 카드
+<Card
+  header={{
+    title: '제품 카드',
+    subtitle: '최신 업데이트',
+    avatar: '/avatar.jpg'
+  }}
+  footer={{
+    children: <Button variant="primary">자세히 보기</Button>,
+    align: 'right'
+  }}
+>
+  <CardContent>
+    제품에 대한 상세 설명이 들어갑니다.
+  </CardContent>
+</Card>
+```
+
+### 카드 변형
+```tsx
+// 3가지 스타일 변형
+<Card variant="filled">채워진 카드</Card>
+<Card variant="outlined">테두리 카드</Card>
+<Card variant="elevated">그림자 카드</Card>
+
+// 3가지 크기
+<Card size="small">작은 카드</Card>
+<Card size="medium">보통 카드</Card>
+<Card size="large">큰 카드</Card>
+
+// 방향 설정
+<Card direction="vertical">세로 카드</Card>
+<Card direction="horizontal">가로 카드</Card>
+```
+
+### 이미지가 있는 카드
+```tsx
+<Card
+  image={{
+    src: '/product.jpg',
+    alt: '제품 이미지',
+    position: 'top', // 'top' | 'left' | 'right'
+    aspectRatio: '16/9'
+  }}
+  header={{
+    title: '제품명',
+    subtitle: '₩99,000'
+  }}
+>
+  <CardContent>
+    제품에 대한 설명입니다.
+  </CardContent>
+  <CardActions>
+    <Button variant="primary">구매하기</Button>
+    <Button variant="secondary">장바구니</Button>
+  </CardActions>
+</Card>
+```
+
+### 인터랙티브 카드
+```tsx
+// 클릭 가능한 카드
+<Card 
+  clickable={true}
+  onClick={() => navigate('/product/1')}
+  selected={selectedCard === 1}
+  hoverable={true}
+>
+  <CardContent>
+    클릭 가능한 카드입니다.
+  </CardContent>
+</Card>
+
+// 선택 가능한 카드 그룹
+function SelectableCards() {
+  const [selected, setSelected] = useState<string | null>(null);
+  
+  return (
+    <CardGrid columns={3} gap="medium">
+      {plans.map(plan => (
+        <Card
+          key={plan.id}
+          clickable
+          selected={selected === plan.id}
+          onClick={() => setSelected(plan.id)}
+          variant="outlined"
+        >
+          <CardContent>
+            <h3>{plan.name}</h3>
+            <p>{plan.price}</p>
+            <p>{plan.description}</p>
+          </CardContent>
+        </Card>
+      ))}
+    </CardGrid>
+  );
+}
+```
+
+### 카드 레이아웃
+```tsx
+// 그리드 레이아웃
+<CardGrid columns={3} gap="large" responsive={true}>
+  <Card>카드 1</Card>
+  <Card>카드 2</Card>
+  <Card>카드 3</Card>
+</CardGrid>
+
+// 그룹 레이아웃 (공통 스타일 적용)
+<CardGroup variant="outlined" spacing="medium">
+  <Card>그룹 카드 1</Card>
+  <Card>그룹 카드 2</Card>
+</CardGroup>
+```
+
+### 로딩 상태 카드
+```tsx
+// 스켈레톤 로딩
+<Card loading={true}>
+  <CardContent>
+    로딩 중일 때 스켈레톤이 표시됩니다.
+  </CardContent>
+</Card>
+
+// 커스텀 로딩 상태
+{isLoading ? (
+  <Card>
+    <CardContent>
+      <LoadingSpinner text="데이터를 불러오는 중..." />
+    </CardContent>
+  </Card>
+) : (
+  <Card>
+    <CardContent>
+      실제 콘텐츠
+    </CardContent>
+  </Card>
+)}
+```
+
+## 🔄 LoadingSpinner 컴포넌트
+
+### 기본 스피너
+```tsx
+import { LoadingSpinner } from 'mbsw-ui-kit';
+
+// 4가지 애니메이션 변형
+<LoadingSpinner variant="circular" />
+<LoadingSpinner variant="dots" />
+<LoadingSpinner variant="bars" />
+<LoadingSpinner variant="pulse" />
+
+// 3가지 크기
+<LoadingSpinner size="small" />
+<LoadingSpinner size="medium" />
+<LoadingSpinner size="large" />
+
+// 3가지 색상
+<LoadingSpinner color="primary" />
+<LoadingSpinner color="secondary" />
+<LoadingSpinner color="white" />
+```
+
+### 텍스트가 있는 스피너
+```tsx
+// 텍스트 위치 설정
+<LoadingSpinner text="로딩 중..." textPosition="bottom" />
+<LoadingSpinner text="처리 중..." textPosition="right" />
+
+// 인라인 스피너 (텍스트 내 삽입)
+<p>
+  데이터를 불러오는 중 <LoadingSpinner size="small" inline /> 잠시 기다려주세요.
+</p>
+```
+
+### 전체 화면 오버레이
+```tsx
+import { LoadingSpinnerOverlay } from 'mbsw-ui-kit';
+
+function DataPage() {
+  const [loading, setLoading] = useState(false);
+  
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      await api.fetchData();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div>
+      <Button onClick={fetchData}>데이터 로드</Button>
+      
+      <LoadingSpinnerOverlay
+        show={loading}
+        spinnerProps={{
+          variant: 'circular',
+          size: 'large',
+          text: '데이터를 불러오는 중...',
+          color: 'white'
+        }}
+        opacity={0.7}
+        closeOnClick={true}
+        onClose={() => setLoading(false)}
+      />
+    </div>
+  );
+}
+```
+
+### 복수 스피너 그룹
+```tsx
+import { LoadingSpinnerGroup } from 'mbsw-ui-kit';
+
+// 수평 그룹
+<LoadingSpinnerGroup direction="horizontal" spacing="large">
+  <LoadingSpinner variant="circular" text="단계 1" />
+  <LoadingSpinner variant="dots" text="단계 2" />
+  <LoadingSpinner variant="bars" text="단계 3" />
+</LoadingSpinnerGroup>
+
+// 수직 그룹
+<LoadingSpinnerGroup direction="vertical" spacing="medium">
+  <LoadingSpinner text="파일 업로드 중..." />
+  <LoadingSpinner text="데이터 처리 중..." />
+  <LoadingSpinner text="완료 중..." />
+</LoadingSpinnerGroup>
+```
+
+### 실용적인 로딩 패턴
+```tsx
+// 버튼 로딩 상태
+function SubmitButton() {
+  const [loading, setLoading] = useState(false);
+  
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      await submitForm();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Button onClick={handleSubmit} disabled={loading}>
+      {loading ? (
+        <>
+          <LoadingSpinner size="small" color="white" inline />
+          처리 중...
+        </>
+      ) : (
+        '제출하기'
+      )}
+    </Button>
+  );
+}
+
+// 페이지 로딩 상태
+function PageLoader({ loading, children }: { loading: boolean; children: React.ReactNode }) {
+  if (loading) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        minHeight: '200px' 
+      }}>
+        <LoadingSpinner 
+          variant="circular" 
+          text="페이지를 불러오는 중..." 
+        />
+      </div>
+    );
+  }
+  
+  return <>{children}</>;
+}
+```
+
 ## 🏗️ Layout 컴포넌트
 
 ### 기본 레이아웃
@@ -654,6 +1093,668 @@ const extendedTheme = {
 };
 ```
 
+## 🎯 고급 패턴 및 실용 예시
+
+### 1. 데이터 테이블 + 필터링 + 모달 조합
+```tsx
+import { useState } from 'react';
+import { 
+  Table, Card, Modal, Button, Input, 
+  LoadingSpinner, Badge 
+} from 'mbsw-ui-kit';
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: 'admin' | 'user' | 'guest';
+  status: 'active' | 'inactive';
+  lastLogin: string;
+}
+
+function UserManagement() {
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const columns = [
+    { key: 'name', title: '이름', sortable: true, width: 200 },
+    { key: 'email', title: '이메일', sortable: true, width: 250 },
+    { 
+      key: 'role', 
+      title: '역할', 
+      width: 120,
+      render: (role: string) => (
+        <Badge 
+          color={role === 'admin' ? 'info' : role === 'user' ? 'primary' : 'secondary'}
+          variant="soft"
+        >
+          {role}
+        </Badge>
+      )
+    },
+    { 
+      key: 'status', 
+      title: '상태', 
+      width: 100,
+      render: (status: string) => (
+        <Badge 
+          color={status === 'active' ? 'success' : 'warning'}
+          variant="dot"
+        >
+          {status === 'active' ? '활성' : '비활성'}
+        </Badge>
+      )
+    },
+    { 
+      key: 'actions', 
+      title: '액션', 
+      width: 120,
+      render: (_: any, user: User) => (
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <Button 
+            size="small" 
+            variant="secondary" 
+            onClick={() => handleEditUser(user)}
+          >
+            수정
+          </Button>
+          <Button 
+            size="small" 
+            variant="danger" 
+            onClick={() => handleDeleteUser(user.id)}
+          >
+            삭제
+          </Button>
+        </div>
+      )
+    }
+  ];
+
+  const filteredUsers = users.filter(user => 
+    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleEditUser = (user: User) => {
+    setSelectedUser(user);
+    setShowModal(true);
+  };
+
+  const handleDeleteUser = async (userId: number) => {
+    if (window.confirm('정말로 삭제하시겠습니까?')) {
+      setLoading(true);
+      try {
+        await api.deleteUser(userId);
+        setUsers(users.filter(u => u.id !== userId));
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  return (
+    <Card>
+      <CardContent>
+        <div style={{ marginBottom: '16px', display: 'flex', gap: '16px', alignItems: 'center' }}>
+          <Input
+            type="search"
+            placeholder="사용자 검색..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ flex: 1 }}
+          />
+          <Button variant="primary" onClick={() => setShowModal(true)}>
+            사용자 추가
+          </Button>
+        </div>
+        
+        <Table
+          columns={columns}
+          data={filteredUsers}
+          loading={loading}
+          pagination={{
+            enabled: true,
+            pageSize: 10,
+            showSizeChanger: true
+          }}
+          selection={{
+            enabled: true,
+            type: 'multiple'
+          }}
+          emptyState={{
+            message: '사용자가 없습니다',
+            action: <Button onClick={() => setShowModal(true)}>첫 사용자 추가</Button>
+          }}
+        />
+      </CardContent>
+
+      <Modal
+        isOpen={showModal}
+        onClose={() => {
+          setShowModal(false);
+          setSelectedUser(null);
+        }}
+        title={selectedUser ? '사용자 수정' : '사용자 추가'}
+        size="medium"
+      >
+        <UserForm 
+          user={selectedUser} 
+          onSubmit={(userData) => {
+            // 사용자 저장 로직
+            setShowModal(false);
+            setSelectedUser(null);
+          }}
+        />
+      </Modal>
+    </Card>
+  );
+}
+```
+
+### 2. 대시보드 레이아웃 패턴
+```tsx
+function Dashboard() {
+  const [metrics, setMetrics] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  const fetchDashboardData = async () => {
+    setLoading(true);
+    try {
+      const data = await api.getDashboardMetrics();
+      setMetrics(data);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div style={{ padding: '40px' }}>
+        <LoadingSpinner 
+          variant="circular" 
+          size="large" 
+          text="대시보드 데이터를 불러오는 중..." 
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ padding: '24px' }}>
+      {/* 메트릭 카드 그리드 */}
+      <CardGrid columns={4} gap="large" responsive={true}>
+        <Card variant="filled">
+          <CardContent>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h3 style={{ margin: 0, fontSize: '2rem', fontWeight: 'bold' }}>
+                  {metrics?.totalUsers?.toLocaleString()}
+                </h3>
+                <p style={{ margin: 0, color: '#666' }}>총 사용자</p>
+              </div>
+              <Badge color="success" variant="soft">
+                +12%
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card variant="filled">
+          <CardContent>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h3 style={{ margin: 0, fontSize: '2rem', fontWeight: 'bold' }}>
+                  ₩{metrics?.revenue?.toLocaleString()}
+                </h3>
+                <p style={{ margin: 0, color: '#666' }}>월 매출</p>
+              </div>
+              <Badge color="info" variant="soft">
+                +8%
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card variant="filled">
+          <CardContent>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h3 style={{ margin: 0, fontSize: '2rem', fontWeight: 'bold' }}>
+                  {metrics?.orders?.toLocaleString()}
+                </h3>
+                <p style={{ margin: 0, color: '#666' }}>주문 수</p>
+              </div>
+              <Badge color="warning" variant="soft">
+                -2%
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card variant="filled">
+          <CardContent>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h3 style={{ margin: 0, fontSize: '2rem', fontWeight: 'bold' }}>
+                  {metrics?.satisfaction}%
+                </h3>
+                <p style={{ margin: 0, color: '#666' }}>고객 만족도</p>
+              </div>
+              <Badge color="success" variant="soft">
+                +5%
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
+      </CardGrid>
+
+      {/* 차트 및 테이블 영역 */}
+      <div style={{ marginTop: '32px', display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
+        <Card>
+          <CardContent>
+            <h3>최근 주문</h3>
+            <Table
+              columns={recentOrdersColumns}
+              data={metrics?.recentOrders || []}
+              pagination={{ enabled: false }}
+            />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent>
+            <h3>빠른 액션</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <Button variant="primary" fullWidth>
+                새 제품 추가
+              </Button>
+              <Button variant="secondary" fullWidth>
+                주문 처리
+              </Button>
+              <Button variant="tertiary" fullWidth>
+                고객 지원
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
+```
+
+### 3. 폼 + 검증 + 단계별 진행
+```tsx
+function MultiStepForm() {
+  const [currentStep, setCurrentStep] = useState(1);
+  const [formData, setFormData] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  const steps = [
+    { title: '기본 정보', component: BasicInfoStep },
+    { title: '연락처', component: ContactStep },
+    { title: '추가 정보', component: AdditionalStep },
+    { title: '확인', component: ReviewStep }
+  ];
+
+  const handleNext = () => {
+    if (currentStep < steps.length) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      await api.submitForm(formData);
+      // 성공 처리
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const CurrentStepComponent = steps[currentStep - 1].component;
+
+  return (
+    <div style={{ maxWidth: '600px', margin: '0 auto', padding: '40px 20px' }}>
+      {/* 진행 단계 표시 */}
+      <div style={{ marginBottom: '32px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
+          {steps.map((step, index) => (
+            <div 
+              key={index} 
+              style={{ 
+                flex: 1, 
+                textAlign: 'center',
+                opacity: index + 1 <= currentStep ? 1 : 0.5
+              }}
+            >
+              <div style={{ 
+                width: '32px', 
+                height: '32px', 
+                borderRadius: '50%', 
+                backgroundColor: index + 1 <= currentStep ? '#007bff' : '#e9ecef',
+                color: index + 1 <= currentStep ? 'white' : '#6c757d',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 8px'
+              }}>
+                {index + 1}
+              </div>
+              <small>{step.title}</small>
+            </div>
+          ))}
+        </div>
+        <div style={{ 
+          width: '100%', 
+          height: '4px', 
+          backgroundColor: '#e9ecef', 
+          borderRadius: '2px' 
+        }}>
+          <div style={{ 
+            width: `${(currentStep / steps.length) * 100}%`, 
+            height: '100%', 
+            backgroundColor: '#007bff', 
+            borderRadius: '2px',
+            transition: 'width 0.3s ease'
+          }} />
+        </div>
+      </div>
+
+      {/* 현재 단계 폼 */}
+      <Card>
+        <CardContent>
+          <h2>{steps[currentStep - 1].title}</h2>
+          <CurrentStepComponent 
+            data={formData} 
+            onChange={setFormData} 
+          />
+        </CardContent>
+        
+        <div style={{ 
+          padding: '16px 24px', 
+          borderTop: '1px solid #e9ecef',
+          display: 'flex', 
+          justifyContent: 'space-between' 
+        }}>
+          <Button 
+            variant="secondary" 
+            onClick={handlePrev}
+            disabled={currentStep === 1}
+          >
+            이전
+          </Button>
+          
+          {currentStep === steps.length ? (
+            <Button 
+              variant="primary" 
+              onClick={handleSubmit}
+              loading={loading}
+            >
+              제출하기
+            </Button>
+          ) : (
+            <Button 
+              variant="primary" 
+              onClick={handleNext}
+            >
+              다음
+            </Button>
+          )}
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+// 단계별 컴포넌트 예시
+function BasicInfoStep({ data, onChange }: StepProps) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <ValidatedInput
+        label="회사명"
+        validation={{ required: true, minLength: 2 }}
+        value={data.companyName || ''}
+        onChange={(e) => onChange({...data, companyName: e.target.value})}
+      />
+      
+      <ValidatedInput
+        label="대표자명"
+        validation={{ required: true, minLength: 2 }}
+        value={data.representative || ''}
+        onChange={(e) => onChange({...data, representative: e.target.value})}
+      />
+      
+      <ValidatedInput
+        type="email"
+        label="이메일"
+        validation={VALIDATION_PRESETS.email}
+        value={data.email || ''}
+        onChange={(e) => onChange({...data, email: e.target.value})}
+      />
+    </div>
+  );
+}
+```
+
+### 4. 실시간 검색 + 자동완성
+```tsx
+function SmartSearchInput() {
+  const [query, setQuery] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  const searchProducts = useCallback(
+    debounce(async (searchTerm: string) => {
+      if (searchTerm.length < 2) {
+        setSuggestions([]);
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const results = await api.searchProducts(searchTerm);
+        setSuggestions(results);
+        setShowSuggestions(true);
+      } finally {
+        setLoading(false);
+      }
+    }, 300),
+    []
+  );
+
+  useEffect(() => {
+    searchProducts(query);
+  }, [query, searchProducts]);
+
+  return (
+    <div style={{ position: 'relative' }}>
+      <Input
+        type="search"
+        placeholder="제품 검색..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        onFocus={() => setShowSuggestions(true)}
+        onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+        rightIcon={loading ? <LoadingSpinner size="small" /> : <SearchIcon />}
+      />
+      
+      {showSuggestions && suggestions.length > 0 && (
+        <Card style={{ 
+          position: 'absolute', 
+          top: '100%', 
+          left: 0, 
+          right: 0, 
+          zIndex: 1000,
+          maxHeight: '300px',
+          overflowY: 'auto'
+        }}>
+          {suggestions.map((product, index) => (
+            <div
+              key={product.id}
+              onClick={() => {
+                setQuery(product.name);
+                setShowSuggestions(false);
+              }}
+              style={{
+                padding: '12px',
+                borderBottom: index < suggestions.length - 1 ? '1px solid #e9ecef' : 'none',
+                cursor: 'pointer',
+                transition: 'background-color 0.2s'
+              }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = '#f8f9fa'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <img 
+                  src={product.image} 
+                  alt={product.name}
+                  style={{ width: '40px', height: '40px', borderRadius: '4px' }}
+                />
+                <div>
+                  <div style={{ fontWeight: '500' }}>{product.name}</div>
+                  <div style={{ fontSize: '0.875rem', color: '#666' }}>
+                    ₩{product.price?.toLocaleString()}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </Card>
+      )}
+    </div>
+  );
+}
+```
+
+### 5. 커스텀 훅 패턴
+```tsx
+// API 상태 관리 훅
+function useApiState<T>(apiCall: () => Promise<T>) {
+  const [data, setData] = useState<T | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const execute = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const result = await apiCall();
+      setData(result);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, [apiCall]);
+
+  const reset = useCallback(() => {
+    setData(null);
+    setError(null);
+    setLoading(false);
+  }, []);
+
+  return { data, loading, error, execute, reset };
+}
+
+// 테이블 상태 관리 훅
+function useTableState<T>(initialData: T[] = []) {
+  const [data, setData] = useState<T[]>(initialData);
+  const [selectedRows, setSelectedRows] = useState<T[]>([]);
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null);
+  const [filters, setFilters] = useState<Record<string, any>>({});
+
+  const filteredData = useMemo(() => {
+    let result = [...data];
+    
+    // 필터링 적용
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) {
+        result = result.filter(item => 
+          String(item[key]).toLowerCase().includes(String(value).toLowerCase())
+        );
+      }
+    });
+    
+    // 정렬 적용
+    if (sortConfig) {
+      result.sort((a, b) => {
+        const aVal = a[sortConfig.key];
+        const bVal = b[sortConfig.key];
+        
+        if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
+        if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
+    
+    return result;
+  }, [data, filters, sortConfig]);
+
+  return {
+    data: filteredData,
+    selectedRows,
+    sortConfig,
+    filters,
+    setData,
+    setSelectedRows,
+    setSortConfig,
+    setFilters,
+  };
+}
+
+// 사용 예시
+function ProductList() {
+  const { data: products, loading, execute: fetchProducts } = useApiState(() => api.getProducts());
+  const tableState = useTableState(products);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  return (
+    <div>
+      <div style={{ marginBottom: '16px', display: 'flex', gap: '16px' }}>
+        <Input
+          placeholder="제품 검색..."
+          onChange={(e) => tableState.setFilters({...tableState.filters, name: e.target.value})}
+        />
+        <Button onClick={fetchProducts}>새로고침</Button>
+      </div>
+
+      <Table
+        columns={productColumns}
+        data={tableState.data}
+        loading={loading}
+        selection={{
+          enabled: true,
+          selectedRows: tableState.selectedRows,
+          onSelectionChange: tableState.setSelectedRows
+        }}
+        sortable={true}
+        sortConfig={tableState.sortConfig}
+        onSort={tableState.setSortConfig}
+      />
+    </div>
+  );
+}
+```
+
 ## 📊 실제 사용 예시
 
 ### 전체 애플리케이션 구조
@@ -807,5 +1908,265 @@ export default App;
 ### 5. 타입 안전성
 - TypeScript 타입 정의 활용
 - 제네릭 타입으로 확장성 확보
+
+## 🚨 문제 해결 및 FAQ
+
+### 자주 묻는 질문 (FAQ)
+
+#### Q1. 테마가 적용되지 않아요
+**A:** 모든 컴포넌트는 반드시 `ThemeProvider`로 감싸져야 합니다.
+
+```tsx
+// ❌ 잘못된 예시
+function App() {
+  return <Button>버튼</Button>;
+}
+
+// ✅ 올바른 예시
+import { ThemeProvider } from 'styled-components';
+import { lightTheme } from 'mbsw-ui-kit';
+
+function App() {
+  return (
+    <ThemeProvider theme={lightTheme}>
+      <Button>버튼</Button>
+    </ThemeProvider>
+  );
+}
+```
+
+#### Q2. 스타일이 깨져서 나와요
+**A:** GlobalStyle을 적용했는지 확인해보세요.
+
+```tsx
+import { GlobalStyle, ThemeProvider, lightTheme } from 'mbsw-ui-kit';
+
+function App() {
+  return (
+    <ThemeProvider theme={lightTheme}>
+      <GlobalStyle /> {/* 이것이 필요합니다 */}
+      <div>앱 콘텐츠</div>
+    </ThemeProvider>
+  );
+}
+```
+
+#### Q3. TypeScript 에러가 발생해요
+**A:** 타입 정의를 확인하고, styled-components 타입을 설치했는지 확인하세요.
+
+```bash
+npm install --save-dev @types/styled-components
+```
+
+#### Q4. 커스텀 테마를 만들고 싶어요
+**A:** 기존 테마를 확장하여 새로운 테마를 만들 수 있습니다.
+
+```tsx
+import { lightTheme } from 'mbsw-ui-kit';
+
+const customTheme = {
+  ...lightTheme,
+  colors: {
+    ...lightTheme.colors,
+    primary: '#your-brand-color',
+  },
+};
+```
+
+#### Q5. 컴포넌트가 반응형으로 작동하지 않아요
+**A:** 브레이크포인트를 올바르게 사용하고 있는지 확인하세요.
+
+```tsx
+// ✅ 올바른 브레이크포인트 사용
+const ResponsiveCard = styled(Card)`
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    padding: ${({ theme }) => theme.spacing.sm};
+  }
+`;
+```
+
+#### Q6. 검증이 제대로 작동하지 않아요
+**A:** ValidatedInput과 VALIDATION_PRESETS를 올바르게 사용하고 있는지 확인하세요.
+
+```tsx
+import { ValidatedInput, VALIDATION_PRESETS } from 'mbsw-ui-kit';
+
+<ValidatedInput
+  validation={VALIDATION_PRESETS.email}
+  validateOnChange={true} // 실시간 검증 활성화
+/>
+```
+
+#### Q7. 테이블 데이터가 업데이트되지 않아요
+**A:** data prop이 올바르게 전달되고 있는지, 그리고 key가 고유한지 확인하세요.
+
+```tsx
+<Table
+  columns={columns}
+  data={data} // 이 값이 변경되어야 합니다
+  key={data.length} // 데이터 변경 시 리렌더링 강제
+/>
+```
+
+### 일반적인 문제 해결
+
+#### 1. 스타일이 적용되지 않을 때
+```tsx
+// styled-components 버전 확인
+// package.json에서 "styled-components": "^5.0.0" 이상인지 확인
+
+// CSS-in-JS 충돌 확인
+// 다른 CSS 라이브러리와 함께 사용 시 우선순위 확인
+
+// 개발자 도구에서 스타일 확인
+// Elements 탭에서 실제 적용된 CSS 확인
+```
+
+#### 2. 성능 이슈가 있을 때
+```tsx
+// 1. 필요한 컴포넌트만 import
+import { Button } from 'mbsw-ui-kit/Button';
+
+// 2. React.memo 사용
+const OptimizedComponent = memo(MyComponent);
+
+// 3. 불필요한 리렌더링 방지
+const memoizedCallback = useCallback(() => {}, [deps]);
+```
+
+#### 3. 접근성 문제 해결
+```tsx
+// 1. ARIA 속성 추가
+<Button aria-label="메뉴 열기">☰</Button>
+
+// 2. 키보드 네비게이션 확인
+<Modal
+  isOpen={isOpen}
+  onClose={onClose}
+  // ESC 키로 닫기 기본 지원됨
+/>
+
+// 3. 색상 대비 확인
+// 테마의 색상이 WCAG 가이드라인을 준수하는지 확인
+```
+
+#### 4. 번들 크기 최적화
+```tsx
+// Tree shaking 활용
+import { Button } from 'mbsw-ui-kit/Button';
+import { Input } from 'mbsw-ui-kit/Input';
+
+// webpack-bundle-analyzer로 번들 크기 분석
+// npm install --save-dev webpack-bundle-analyzer
+```
+
+### 개발 팁
+
+#### 1. Storybook 활용
+```bash
+# Storybook 실행하여 컴포넌트 미리보기
+npm run storybook
+
+# 컴포넌트 사용법과 예시 확인
+# 각 컴포넌트의 Props 확인
+# 다양한 상태와 변형 테스트
+```
+
+#### 2. 테스트 작성
+```tsx
+// Jest + React Testing Library 사용
+import { render, screen } from '@testing-library/react';
+import { ThemeProvider } from 'styled-components';
+import { Button, lightTheme } from 'mbsw-ui-kit';
+
+const renderWithTheme = (component) => {
+  return render(
+    <ThemeProvider theme={lightTheme}>
+      {component}
+    </ThemeProvider>
+  );
+};
+
+test('Button이 올바르게 렌더링된다', () => {
+  renderWithTheme(<Button>테스트</Button>);
+  expect(screen.getByRole('button')).toBeInTheDocument();
+});
+```
+
+#### 3. 디버깅 도구
+```tsx
+// React Developer Tools 사용
+// Components 탭에서 props와 state 확인
+// Profiler 탭에서 성능 분석
+
+// styled-components 디버깅
+// displayName 설정으로 컴포넌트 식별 쉽게
+const StyledButton = styled.button`
+  /* styles */
+`;
+StyledButton.displayName = 'StyledButton';
+```
+
+### 마이그레이션 가이드
+
+#### 기존 프로젝트에서 MBSW UI Kit로 이전
+
+**1단계: 의존성 설치**
+```bash
+npm install mbsw-ui-kit styled-components
+npm install --save-dev @types/styled-components
+```
+
+**2단계: 점진적 적용**
+```tsx
+// 기존 컴포넌트를 하나씩 교체
+// 먼저 Button부터 시작하는 것을 권장
+
+// Before
+<button className="btn btn-primary" onClick={onClick}>
+  클릭
+</button>
+
+// After
+import { Button } from 'mbsw-ui-kit';
+<Button variant="primary" onClick={onClick}>
+  클릭
+</Button>
+```
+
+**3단계: 테마 통합**
+```tsx
+// 기존 CSS 변수를 테마로 변환
+const customTheme = {
+  ...lightTheme,
+  colors: {
+    ...lightTheme.colors,
+    primary: 'var(--your-primary-color)', // 기존 CSS 변수 활용
+  },
+};
+```
+
+**4단계: 스타일 정리**
+```tsx
+// 기존 CSS 파일에서 중복되는 스타일 제거
+// UI Kit 컴포넌트로 대체된 부분 삭제
+```
+
+### 버전별 호환성
+
+#### React 버전 지원
+- React 16.8+ (Hooks 지원)
+- React 17.x (권장)
+- React 18.x (완전 지원)
+
+#### TypeScript 버전
+- TypeScript 4.0+ (권장)
+- 최신 타입 정의 지원
+
+#### 브라우저 지원
+- Chrome 90+
+- Firefox 88+
+- Safari 14+
+- Edge 90+
 
 이 가이드를 통해 MBSW UI Kit를 효과적으로 활용하여 일관성 있고 접근 가능한 사용자 인터페이스를 구축할 수 있습니다.
