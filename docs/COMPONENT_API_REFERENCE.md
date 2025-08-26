@@ -11,6 +11,7 @@
 - [Table](#table)
 - [Card](#card)
 - [LoadingSpinner](#loadingspinner)
+- [Toast](#toast)
 
 ---
 
@@ -346,6 +347,134 @@ interface CardImageProps {
 | `zIndex` | `number` | `9999` | z-index 값 |
 | `closeOnClick` | `boolean` | `false` | 클릭 시 닫기 |
 | `onClose` | `() => void` | - | 닫기 이벤트 |
+
+---
+
+## Toast
+
+### ToastProvider Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `React.ReactNode` | - | 감싸질 컴포넌트들 |
+| `defaultOptions` | `Partial<ToastOptions>` | - | 기본 토스트 옵션 |
+| `maxToasts` | `number` | `10` | 최대 표시 가능한 토스트 개수 |
+
+### ToastOptions Interface
+
+```tsx
+interface ToastOptions {
+  type?: 'success' | 'error' | 'warning' | 'info';
+  duration?: number; // 밀리초, 0이면 수동으로만 닫기
+  closable?: boolean;
+  pauseOnHover?: boolean;
+  position?: 'top-right' | 'top-left' | 'top-center' | 'bottom-right' | 'bottom-left' | 'bottom-center';
+  animation?: 'slide' | 'fade' | 'bounce';
+  actions?: ToastAction[];
+  showIcon?: boolean;
+  icon?: React.ReactNode;
+  id?: string;
+  showProgress?: boolean;
+  role?: 'alert' | 'status';
+}
+```
+
+### ToastAction Interface
+
+```tsx
+interface ToastAction {
+  label: string;
+  onClick: () => void;
+  variant?: 'primary' | 'secondary';
+}
+```
+
+### useToast Hook
+
+`useToast` 훅은 다음과 같은 메서드들을 반환합니다:
+
+| Method | Type | Description |
+|--------|------|-------------|
+| `success` | `(message: string, options?: Omit<ToastOptions, 'type'>) => string` | 성공 토스트 표시 |
+| `error` | `(message: string, options?: Omit<ToastOptions, 'type'>) => string` | 에러 토스트 표시 |
+| `warning` | `(message: string, options?: Omit<ToastOptions, 'type'>) => string` | 경고 토스트 표시 |
+| `info` | `(message: string, options?: Omit<ToastOptions, 'type'>) => string` | 정보 토스트 표시 |
+| `toast` | `(message: string, options?: ToastOptions) => string` | 커스텀 토스트 표시 |
+| `dismiss` | `(id: string) => void` | 특정 토스트 제거 |
+| `dismissAll` | `() => void` | 모든 토스트 제거 |
+| `promise` | `<T>(promise: Promise<T>, options: PromiseOptions) => Promise<T>` | Promise 상태 기반 토스트 |
+
+### PromiseOptions Interface
+
+```tsx
+interface PromiseOptions {
+  loading: string;
+  success: string | ((data: T) => string);
+  error: string | ((error: any) => string);
+}
+```
+
+### Examples
+
+```tsx
+// 기본 사용
+const toast = useToast();
+
+// 타입별 토스트
+toast.success('성공했습니다!');
+toast.error('오류가 발생했습니다.');
+toast.warning('주의하세요.');
+toast.info('정보를 확인하세요.');
+
+// 옵션과 함께
+toast.success('저장 완료', {
+  duration: 3000,
+  position: 'top-center',
+  actions: [
+    {
+      label: '보기',
+      onClick: () => navigate('/view'),
+      variant: 'primary'
+    }
+  ]
+});
+
+// Promise 기반 토스트
+await toast.promise(
+  fetch('/api/data'),
+  {
+    loading: '로딩 중...',
+    success: '성공!',
+    error: '실패했습니다.'
+  }
+);
+
+// 토스트 관리
+const id = toast.info('영구 토스트', { duration: 0 });
+setTimeout(() => toast.dismiss(id), 5000);
+toast.dismissAll(); // 모든 토스트 제거
+```
+
+### 접근성
+
+- 토스트는 기본적으로 `role="alert"`와 `aria-live="assertive"` 속성을 가집니다
+- `aria-atomic="true"`로 전체 메시지가 읽힙니다
+- 닫기 버튼에는 적절한 `aria-label`이 설정됩니다
+- 키보드로 닫기 버튼에 접근 가능합니다
+
+### 스타일링
+
+기본 스타일은 테마 시스템을 따르며, 커스터마이징이 가능합니다:
+
+```tsx
+import styled from 'styled-components';
+import { ToastWrapper } from 'mbsw-ui-kit';
+
+const CustomToast = styled(ToastWrapper)`
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+`;
+```
 
 ---
 

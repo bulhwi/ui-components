@@ -770,6 +770,314 @@ function PageLoader({ loading, children }: { loading: boolean; children: React.R
 }
 ```
 
+## 🔔 Toast 컴포넌트
+
+### 기본 Toast 사용법
+```tsx
+import { ToastProvider, useToast } from 'mbsw-ui-kit';
+
+function App() {
+  return (
+    <ToastProvider>
+      <MyComponent />
+    </ToastProvider>
+  );
+}
+
+function MyComponent() {
+  const toast = useToast();
+
+  return (
+    <div>
+      <Button onClick={() => toast.success('성공적으로 저장되었습니다!')}>
+        Success Toast
+      </Button>
+      <Button onClick={() => toast.error('오류가 발생했습니다.')}>
+        Error Toast
+      </Button>
+      <Button onClick={() => toast.warning('주의가 필요합니다.')}>
+        Warning Toast
+      </Button>
+      <Button onClick={() => toast.info('새로운 정보가 있습니다.')}>
+        Info Toast
+      </Button>
+    </div>
+  );
+}
+```
+
+### Toast 옵션 설정
+```tsx
+function MyComponent() {
+  const toast = useToast();
+
+  const showCustomToast = () => {
+    toast.success('파일이 업로드되었습니다.', {
+      duration: 5000,           // 5초 후 자동 닫기
+      position: 'top-center',   // 상단 중앙에 표시
+      animation: 'bounce',      // 바운스 애니메이션
+      closable: true,          // 수동 닫기 버튼 표시
+      pauseOnHover: true,      // 마우스 호버 시 타이머 정지
+      showProgress: true,      // 프로그레스 바 표시
+    });
+  };
+
+  return (
+    <Button onClick={showCustomToast}>
+      커스텀 Toast 표시
+    </Button>
+  );
+}
+```
+
+### Toast 위치 설정
+```tsx
+// 6가지 위치 지원
+toast.info('우상단', { position: 'top-right' });
+toast.info('좌상단', { position: 'top-left' });
+toast.info('상단 중앙', { position: 'top-center' });
+toast.info('우하단', { position: 'bottom-right' });
+toast.info('좌하단', { position: 'bottom-left' });
+toast.info('하단 중앙', { position: 'bottom-center' });
+```
+
+### 애니메이션 종류
+```tsx
+// 3가지 애니메이션 지원
+toast.info('슬라이드 애니메이션', { animation: 'slide' });
+toast.info('페이드 애니메이션', { animation: 'fade' });
+toast.info('바운스 애니메이션', { animation: 'bounce' });
+```
+
+### 액션 버튼이 있는 Toast
+```tsx
+function FileUploadComponent() {
+  const toast = useToast();
+
+  const handleUpload = () => {
+    toast.success('파일이 업로드되었습니다.', {
+      duration: 0, // 수동으로만 닫기
+      actions: [
+        {
+          label: '보기',
+          onClick: () => {
+            // 파일 보기 로직
+            console.log('파일 보기');
+          },
+          variant: 'primary'
+        },
+        {
+          label: '공유',
+          onClick: () => {
+            // 파일 공유 로직
+            console.log('파일 공유');
+          },
+          variant: 'secondary'
+        }
+      ]
+    });
+  };
+
+  return <Button onClick={handleUpload}>파일 업로드</Button>;
+}
+```
+
+### Promise 기반 Toast
+```tsx
+function ApiCallComponent() {
+  const toast = useToast();
+
+  const handleApiCall = async () => {
+    const apiCall = fetch('/api/data').then(res => res.json());
+    
+    // Promise 상태에 따라 자동으로 Toast 업데이트
+    try {
+      const data = await toast.promise(apiCall, {
+        loading: 'API 호출 중...',
+        success: (data) => `성공: ${data.message}`,
+        error: (err) => `실패: ${err.message}`,
+      });
+      
+      console.log('API 결과:', data);
+    } catch (error) {
+      console.error('API 에러:', error);
+    }
+  };
+
+  return <Button onClick={handleApiCall}>API 호출</Button>;
+}
+```
+
+### Toast 관리
+```tsx
+function ToastManagerComponent() {
+  const toast = useToast();
+
+  const showMultipleToasts = () => {
+    const id1 = toast.success('첫 번째 메시지');
+    const id2 = toast.info('두 번째 메시지');
+    const id3 = toast.warning('세 번째 메시지');
+
+    // 특정 Toast 닫기
+    setTimeout(() => {
+      toast.dismiss(id2);
+    }, 2000);
+  };
+
+  const clearAllToasts = () => {
+    // 모든 Toast 닫기
+    toast.dismissAll();
+  };
+
+  return (
+    <div>
+      <Button onClick={showMultipleToasts}>여러 Toast 표시</Button>
+      <Button onClick={clearAllToasts}>모든 Toast 닫기</Button>
+    </div>
+  );
+}
+```
+
+### 커스텀 아이콘
+```tsx
+function CustomIconToast() {
+  const toast = useToast();
+
+  const showCustomIcon = () => {
+    toast.info('커스텀 아이콘 Toast', {
+      icon: <div>🎉</div>,
+      showIcon: true,
+    });
+  };
+
+  // 아이콘 숨기기
+  const showWithoutIcon = () => {
+    toast.info('아이콘 없는 Toast', {
+      showIcon: false,
+    });
+  };
+
+  return (
+    <div>
+      <Button onClick={showCustomIcon}>커스텀 아이콘</Button>
+      <Button onClick={showWithoutIcon}>아이콘 없음</Button>
+    </div>
+  );
+}
+```
+
+### 전역 설정
+```tsx
+import { ToastProvider } from 'mbsw-ui-kit';
+
+function App() {
+  return (
+    <ToastProvider
+      defaultOptions={{
+        duration: 3000,
+        position: 'top-right',
+        animation: 'slide',
+        pauseOnHover: true,
+        closable: true,
+        showProgress: true,
+      }}
+      maxToasts={5} // 최대 5개 Toast까지 표시
+    >
+      <MyApp />
+    </ToastProvider>
+  );
+}
+```
+
+### 실용적인 Toast 패턴
+```tsx
+// 1. 폼 제출 피드백
+function FormComponent() {
+  const toast = useToast();
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (formData) => {
+    setLoading(true);
+    
+    try {
+      await api.submitForm(formData);
+      toast.success('성공적으로 저장되었습니다.', {
+        actions: [
+          {
+            label: '목록으로',
+            onClick: () => router.push('/list'),
+            variant: 'primary'
+          }
+        ]
+      });
+    } catch (error) {
+      toast.error(`저장 실패: ${error.message}`, {
+        duration: 0, // 수동으로만 닫기
+        actions: [
+          {
+            label: '다시 시도',
+            onClick: () => handleSubmit(formData),
+            variant: 'primary'
+          }
+        ]
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+}
+
+// 2. 실시간 알림
+function NotificationComponent() {
+  const toast = useToast();
+
+  useEffect(() => {
+    const socket = io('/notifications');
+    
+    socket.on('notification', (data) => {
+      toast.info(data.message, {
+        duration: 8000,
+        position: 'top-center',
+        actions: [
+          {
+            label: '확인',
+            onClick: () => markAsRead(data.id),
+            variant: 'primary'
+          }
+        ]
+      });
+    });
+
+    return () => socket.disconnect();
+  }, [toast]);
+}
+
+// 3. 진행 상태 표시
+function ProgressToast() {
+  const toast = useToast();
+  
+  const handleLongTask = async () => {
+    const taskId = toast.info('작업을 시작합니다...', { duration: 0 });
+    
+    try {
+      for (let i = 1; i <= 5; i++) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        toast.dismiss(taskId);
+        if (i < 5) {
+          toast.info(`진행 중... (${i}/5)`, { duration: 0, id: taskId });
+        }
+      }
+      
+      toast.success('작업이 완료되었습니다!');
+    } catch (error) {
+      toast.dismiss(taskId);
+      toast.error('작업 중 오류가 발생했습니다.');
+    }
+  };
+}
+```
+
 ## 🏗️ Layout 컴포넌트
 
 ### 기본 레이아웃
