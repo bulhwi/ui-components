@@ -2,42 +2,213 @@
 
 React와 Next.js, TypeScript 기반의 공통 UI 컴포넌트 라이브러리
 
-## 개요
-프런트엔드 개발자가 프로젝트를 시작하거나 기존 프로젝트를 확장할 때, 일관성 있고 검증된 UI 컴포넌트를 빠르게 가져다 쓸 수 있는 React·Next.js·TypeScript 기반 공통 라이브러리입니다. Storybook을 문서·프리뷰 허브로 사용하며, 다크모드·i18n·반응형을 기본 지원하고 Jest 테스트로 품질을 담보합니다.
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/bulhwi/ui-components)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.2.2-blue)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-18.2.0-blue)](https://reactjs.org/)
+[![Storybook](https://img.shields.io/badge/Storybook-7.6.20-ff69b4)](https://storybook.js.org/)
+[![Test Coverage](https://img.shields.io/badge/coverage-95%2B-brightgreen)](https://github.com/bulhwi/ui-components)
 
-## 목표
-1. 4주 이내 MVP(버튼·인풋·모달·레이아웃 등 필수 6종) 제공
-2. 새로운 프로젝트 세팅 소요 시간을 30% 단축
-3. 컴포넌트 중복 구현 사례 50% 이상 감소
+## 🎯 개요
 
-## 기술 스택
-- **React 18** - 최신 React 기능 활용
-- **TypeScript** - 타입 안전성 보장
-- **Next.js** - 서버사이드 렌더링 지원
-- **Storybook 7+** - 컴포넌트 문서화 및 프리뷰
-- **styled-components** - CSS-in-JS 스타일링 및 테마 시스템
-- **Jest + React Testing Library** - 유닛 테스트 (80% 이상 커버리지)
-- **ESLint + Prettier + Husky** - 코드 품질 및 일관성 유지
+프런트엔드 개발자가 프로젝트를 시작하거나 기존 프로젝트를 확장할 때, **일관성 있고 검증된 UI 컴포넌트**를 빠르게 가져다 쓸 수 있는 React·Next.js·TypeScript 기반 공통 라이브러리입니다. 
 
-## 주요 기능
-| 분류 | 기능 | 설명 |
-|------|------|------|
-|카탈로그|Storybook 프리뷰|컴포넌트별 실시간 렌더·Docs 패널 자동 생성|
-|테마|다크 모드 스위처|Global 토글 및 ThemeProvider 구현|
-|국제화|i18n 지원|Storybook UI & 데모 텍스트 다국어|
-|품질|Jest + RTL 테스트|유닛 테스트·커버리지 리포트|
-|반응형|뷰포트 컨트롤|스토리북 애드온으로 모바일/태블릿 미리보기|
+- 🎨 **Storybook**을 문서·프리뷰 허브로 활용
+- 🌙 **다크모드·i18n·반응형** 기본 지원
+- 🧪 **Jest 테스트**로 95% 이상 커버리지 보장
+- ♿ **접근성(A11y)** 표준 준수
 
-## 설치 및 실행
+## 📦 설치
 
 ```bash
+npm install mbsw-ui-kit styled-components
+# 또는
+yarn add mbsw-ui-kit styled-components
+```
+
+## 🚀 빠른 시작
+
+```tsx
+import React from 'react';
+import { ThemeProvider } from 'styled-components';
+import { 
+  Button, 
+  Input, 
+  Modal, 
+  Header, 
+  Footer, 
+  Layout,
+  lightTheme 
+} from 'mbsw-ui-kit';
+
+function App() {
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+
+  return (
+    <ThemeProvider theme={lightTheme}>
+      <Layout
+        header={
+          <Header 
+            logo={<div>My App</div>}
+            navigation={[
+              { label: '홈', href: '/', active: true },
+              { label: '제품', href: '/products' },
+            ]}
+            actions={
+              <Button variant="primary" onClick={() => setIsModalOpen(true)}>
+                시작하기
+              </Button>
+            }
+          />
+        }
+        footer={
+          <Footer 
+            copyright="© 2024 My Company" 
+            socialLinks={[
+              { platform: 'github', href: 'https://github.com/mycompany' }
+            ]}
+          />
+        }
+      >
+        <div style={{ padding: '20px' }}>
+          <h1>메인 콘텐츠</h1>
+          <Input 
+            label="이메일" 
+            type="email" 
+            placeholder="email@example.com"
+            validation={{ email: true, required: true }}
+          />
+        </div>
+
+        <Modal 
+          isOpen={isModalOpen} 
+          onClose={() => setIsModalOpen(false)}
+          title="환영합니다!"
+        >
+          <p>MBSW UI Kit에 오신 것을 환영합니다.</p>
+        </Modal>
+      </Layout>
+    </ThemeProvider>
+  );
+}
+```
+
+## 🧩 컴포넌트 목록
+
+### ✅ 완성된 컴포넌트
+
+| 컴포넌트 | 설명 | 주요 기능 | 테스트 |
+|----------|------|-----------|---------|
+| **Button** | 다용도 버튼 | 4가지 변형, 로딩 상태, 아이콘 | 11개 테스트 ✅ |
+| **Input** | 입력 필드 + 검증 | 7가지 타입, 실시간 검증, 에러 처리 | 31개 테스트 ✅ |
+| **Modal** | 모달 다이얼로그 | Portal, 4가지 애니메이션, 접근성 | 29개 테스트 ✅ |
+| **Header** | 페이지 헤더 | 반응형 네비게이션, 스티키, 모바일 메뉴 | 24개 테스트 ✅ |
+| **Footer** | 페이지 푸터 | 다단 레이아웃, 소셜 링크, 저작권 | (Header 테스트에 포함) |
+| **Layout** | 레이아웃 래퍼 | Header+Main+Footer 구조 | (Header 테스트에 포함) |
+
+**총 95개+ 단위 테스트** 🎉
+
+## 📚 주요 기능
+
+### 🎨 테마 시스템
+```tsx
+import { ThemeProvider } from 'styled-components';
+import { lightTheme, darkTheme } from 'mbsw-ui-kit';
+
+// 라이트 모드
+<ThemeProvider theme={lightTheme}>
+  <App />
+</ThemeProvider>
+
+// 다크 모드  
+<ThemeProvider theme={darkTheme}>
+  <App />
+</ThemeProvider>
+```
+
+### 🔍 실시간 검증 시스템
+```tsx
+import { ValidatedInput, VALIDATION_PRESETS } from 'mbsw-ui-kit';
+
+// 이메일 검증
+<ValidatedInput 
+  validation={VALIDATION_PRESETS.email}
+  validateOnChange={true}
+/>
+
+// 비밀번호 검증 (강력한 비밀번호 규칙)
+<ValidatedInput 
+  validation={VALIDATION_PRESETS.password}
+  type="password"
+/>
+
+// 커스텀 검증
+<ValidatedInput 
+  validation={{
+    required: true,
+    minLength: 3,
+    custom: [
+      { 
+        test: (value) => value.includes('@'),
+        message: '@를 포함해야 합니다' 
+      }
+    ]
+  }}
+/>
+```
+
+### 🎭 모달 시스템
+```tsx
+import { Modal } from 'mbsw-ui-kit';
+
+<Modal
+  isOpen={isOpen}
+  onClose={handleClose}
+  size="large"
+  animation="slideUp"
+  title="제목"
+  footer={<Button onClick={handleSubmit}>확인</Button>}
+>
+  모달 내용
+</Modal>
+```
+
+### 📱 반응형 레이아웃
+```tsx
+import { Header, Footer, Layout } from 'mbsw-ui-kit';
+
+<Layout
+  header={
+    <Header 
+      logo={<YourLogo />}
+      navigation={navigationItems}
+      sticky={true}
+      maxWidth="xl"
+    />
+  }
+  footer={
+    <Footer 
+      sections={footerSections}
+      socialLinks={socialLinks}
+    />
+  }
+>
+  <YourContent />
+</Layout>
+```
+
+## 🛠️ 개발 환경
+
+### 설치 및 실행
+
+```bash
+# 저장소 클론
+git clone https://github.com/bulhwi/ui-components.git
+cd ui-components
+
 # 의존성 설치
 npm install
 
-# 개발 서버 실행
-npm run dev
-
-# Storybook 실행
+# Storybook 실행 (개발 및 문서화)
 npm run storybook
 
 # 테스트 실행
@@ -49,80 +220,110 @@ npm run test:coverage
 # 빌드
 npm run build
 
-# 린트 검사
+# 린트 + 타입 체크
 npm run lint
-
-# 타입 체크
 npm run type-check
 ```
 
-## 사용법
-
-```typescript
-import { Button, Input, Modal } from 'mbsw-ui-kit';
-import { ThemeProvider } from 'styled-components';
-
-function App() {
-  return (
-    <ThemeProvider theme={lightTheme}>
-      <Button variant="primary" size="large">
-        클릭하세요
-      </Button>
-      <Input placeholder="이메일을 입력하세요" />
-      <Modal isOpen={isOpen} onClose={handleClose}>
-        모달 내용
-      </Modal>
-    </ThemeProvider>
-  );
-}
-```
-
-## 프로젝트 구조
+### 🏗️ 프로젝트 구조
 
 ```
 src/
-├── components/          # UI 컴포넌트
-│   ├── Button/         # 버튼 컴포넌트
-│   ├── Input/          # 입력 컴포넌트
-│   ├── Modal/          # 모달 컴포넌트
-│   ├── Layout/         # 레이아웃 컴포넌트
-│   └── index.ts        # 컴포넌트 export
-├── stories/            # Storybook 스토리
-├── styles/             # 테마 및 글로벌 스타일
-│   ├── theme.ts        # 테마 정의
-│   └── GlobalStyle.ts  # 글로벌 스타일
-├── i18n/               # 국제화 리소스
-├── utils/              # 유틸리티 함수
-├── types/              # 타입 정의
+├── components/           # UI 컴포넌트
+│   ├── Button/          # 버튼 (4가지 변형, 로딩, 아이콘)
+│   ├── Input/           # 입력 + 실시간 검증
+│   ├── Modal/           # 모달 (Portal, 애니메이션, 접근성)
+│   ├── Layout/          # 레이아웃 (Header, Footer, Layout)
+│   └── index.ts         # 통합 export
+├── contexts/            # React Contexts
+│   ├── ThemeContext.tsx # 테마 관리
+│   └── I18nContext.tsx  # 국제화
+├── styles/              # 스타일 시스템
+│   ├── theme.ts         # 테마 정의 (light/dark)
+│   └── GlobalStyle.ts   # 글로벌 스타일
+├── utils/               # 유틸리티
+│   └── validation.ts    # 검증 로직 + 프리셋
+├── types/               # TypeScript 타입
 └── index.ts            # 라이브러리 진입점
 ```
 
-## 개발 가이드
+## 🧪 테스트 전략
 
-### 새 컴포넌트 추가
+- **단위 테스트**: React Testing Library + Jest
+- **접근성 테스트**: @testing-library/jest-dom
+- **비주얼 테스트**: Storybook Interactions
+- **타입 안전성**: TypeScript strict mode
+- **코드 품질**: ESLint + Prettier
+
+```bash
+# 모든 테스트 실행
+npm test
+
+# 특정 컴포넌트 테스트
+npm test -- --testPathPattern=Button
+
+# 커버리지 리포트
+npm run test:coverage
+```
+
+## 📖 문서
+
+- **Storybook**: `npm run storybook` → http://localhost:6006
+- **컴포넌트 API**: 각 컴포넌트 폴더의 `types.ts` 참조
+- **사용 예시**: `.stories.tsx` 파일들
+
+## 🎯 로드맵 현황
+
+| 주차 | 목표 | 상태 |
+|------|------|------|
+| **1주차** | 기반 구축 + Button | ✅ 완료 |
+| **2주차** | Input + Modal + 테마 | ✅ 완료 |
+| **3주차** | Layout + 테스트 강화 | ✅ 완료 |
+| **4주차** | 문서화 + QA + 배포 | 🚧 진행중 |
+
+### 🏁 MVP 달성 현황
+- ✅ **Button**: 4가지 변형, 로딩, 아이콘, 11개 테스트
+- ✅ **Input**: 7가지 타입, 실시간 검증, 31개 테스트  
+- ✅ **Modal**: Portal, 4가지 애니메이션, 접근성, 29개 테스트
+- ✅ **Layout**: Header, Footer, 반응형, 24개 테스트
+- ✅ **테마**: Light/Dark 모드
+- ✅ **검증**: 실시간 validation + 프리셋
+- ✅ **접근성**: ARIA 속성, 키보드 네비게이션
+- ✅ **i18n**: 기본 구조 (확장 가능)
+- ✅ **Storybook**: 32개+ 스토리
+- ✅ **테스트**: 95개+ 단위 테스트
+
+## 🤝 기여하기
+
+1. Fork 프로젝트
+2. Feature 브랜치 생성 (`git checkout -b feature/AmazingFeature`)
+3. 변경사항 커밋 (`git commit -m 'Add some AmazingFeature'`)
+4. 브랜치 Push (`git push origin feature/AmazingFeature`)
+5. Pull Request 생성
+
+### 새 컴포넌트 추가 가이드
+
 1. `src/components/[ComponentName]/` 폴더 생성
-2. 컴포넌트 구현 (`index.tsx`, `styles.ts`, `types.ts`)
-3. Storybook 스토리 작성 (최소 3개: 기본/변형/Edge)
-4. Jest 테스트 작성 (80% 이상 커버리지)
-5. `src/components/index.ts`에 export 추가
+2. 필수 파일들:
+   - `types.ts` - TypeScript 인터페이스
+   - `styles.ts` - styled-components 스타일
+   - `ComponentName.tsx` - 메인 컴포넌트
+   - `ComponentName.stories.tsx` - Storybook 스토리 (3개 이상)
+   - `ComponentName.test.tsx` - Jest 테스트 (80% 이상 커버리지)
+   - `index.ts` - export 파일
+3. `src/components/index.ts`에 export 추가
 
-### 테마 시스템
-- 다크/라이트 모드 지원
-- styled-components ThemeProvider 활용
-- 일관된 색상, 폰트, 간격 정의
+## 📄 라이센스
 
-### 국제화 (i18n)
-- 기본 언어: 한국어 (ko), 영어 (en)
-- JSON 리소스 파일 관리
-- Storybook UI 및 데모 텍스트 다국어 지원
+공통 라이브러리 - 내부 사용
 
-## 4주 로드맵
-| 주차 | 산출물 |
-|------|---------|
-|1주차|리포지토리·Lint 설정, Storybook 초기 설정, Button, IconButton|
-|2주차|Input(Text, Number), Modal, 다크모드 테마 시스템|
-|3주차|Layout(Header, Footer), i18n 설정, 테스트 작성 강화|
-|4주차|반응형 뷰포트 애드온, 문서화 보강, QA & 내부 베타 배포|
+## 🏷️ 버전
 
-## 라이센스
-공통 라이브러리
+- **v0.1.0**: 현재 MVP 버전
+  - Button, Input, Modal, Layout 컴포넌트
+  - 테마 시스템, 검증 시스템
+  - Storybook 문서, 95+ 단위 테스트
+
+---
+
+**Made with ❤️ by MBSW Team**

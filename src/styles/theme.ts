@@ -17,6 +17,11 @@ const baseTheme = {
       semibold: 600,
       bold: 700,
     },
+    lineHeights: {
+      tight: 1.25,
+      normal: 1.5,
+      relaxed: 1.75,
+    },
   },
   spacing: {
     xs: '0.25rem',   // 4px

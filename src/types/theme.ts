@@ -36,6 +36,11 @@ export interface Theme {
       semibold: number;
       bold: number;
     };
+    lineHeights: {
+      tight: number;
+      normal: number;
+      relaxed: number;
+    };
   };
   spacing: {
     xs: string;
