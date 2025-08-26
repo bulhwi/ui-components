@@ -1078,6 +1078,482 @@ function ProgressToast() {
 }
 ```
 
+## 📋 Dropdown 컴포넌트
+
+### 기본 Dropdown 사용법
+```tsx
+import { Dropdown, DropdownOption } from 'mbsw-ui-kit';
+
+const options: DropdownOption<string>[] = [
+  { label: 'Apple', value: 'apple' },
+  { label: 'Banana', value: 'banana' },
+  { label: 'Cherry', value: 'cherry' },
+];
+
+function MyComponent() {
+  const [value, setValue] = useState<string>();
+
+  return (
+    <Dropdown
+      options={options}
+      value={value}
+      onChange={setValue}
+      placeholder="과일을 선택하세요"
+    />
+  );
+}
+```
+
+### 다중 선택 Dropdown
+```tsx
+function MultiSelectComponent() {
+  const [values, setValues] = useState<string[]>([]);
+
+  return (
+    <Dropdown
+      options={options}
+      values={values}
+      onMultiChange={setValues}
+      multiple
+      showTags  // 선택된 값을 태그로 표시
+      maxTags={3}  // 최대 3개 태그만 표시, 나머지는 +N
+      placeholder="여러 개를 선택하세요"
+      closeOnSelect={false}  // 선택 후에도 메뉴 열어두기
+    />
+  );
+}
+```
+
+### 검색 가능한 Dropdown
+```tsx
+function SearchableComponent() {
+  const [value, setValue] = useState<string>();
+
+  return (
+    <Dropdown
+      options={options}
+      value={value}
+      onChange={setValue}
+      searchable
+      searchPlaceholder="검색어를 입력하세요..."
+      placeholder="검색해서 선택하세요"
+    />
+  );
+}
+```
+
+### 그룹화된 옵션
+```tsx
+import { DropdownOptionGroup } from 'mbsw-ui-kit';
+
+const groupedOptions: DropdownOptionGroup<string>[] = [
+  {
+    label: 'Fruits',
+    options: [
+      { label: 'Apple', value: 'apple' },
+      { label: 'Banana', value: 'banana' },
+    ]
+  },
+  {
+    label: 'Vegetables', 
+    options: [
+      { label: 'Carrot', value: 'carrot' },
+      { label: 'Broccoli', value: 'broccoli' },
+    ]
+  },
+  {
+    label: 'Disabled Group',
+    disabled: true,  // 전체 그룹 비활성화
+    options: [
+      { label: 'Item 1', value: 'item1' },
+      { label: 'Item 2', value: 'item2' },
+    ]
+  }
+];
+
+function GroupedComponent() {
+  const [value, setValue] = useState<string>();
+
+  return (
+    <Dropdown
+      options={groupedOptions}
+      value={value}
+      onChange={setValue}
+      placeholder="카테고리에서 선택하세요"
+    />
+  );
+}
+```
+
+### 아이콘과 설명이 있는 옵션
+```tsx
+const richOptions: DropdownOption<string>[] = [
+  { 
+    label: 'Administrator', 
+    value: 'admin',
+    icon: '🔧',
+    description: 'Full system access'
+  },
+  { 
+    label: 'Editor', 
+    value: 'editor',
+    icon: '✏️',
+    description: 'Can edit and publish content'
+  },
+  { 
+    label: 'Viewer', 
+    value: 'viewer',
+    icon: '👁️',
+    description: 'Read-only access',
+    disabled: true  // 개별 옵션 비활성화
+  },
+];
+
+function RichOptionsComponent() {
+  const [value, setValue] = useState<string>();
+
+  return (
+    <Dropdown
+      options={richOptions}
+      value={value}
+      onChange={setValue}
+      placeholder="역할을 선택하세요"
+    />
+  );
+}
+```
+
+### 가상화된 대용량 리스트
+```tsx
+// 1000개 이상의 옵션이 있는 경우
+const manyOptions: DropdownOption<number>[] = Array.from({ length: 1000 }, (_, i) => ({
+  label: `Option ${i + 1}`,
+  value: i + 1,
+  description: `Description for option ${i + 1}`,
+}));
+
+function VirtualizedComponent() {
+  const [value, setValue] = useState<number>();
+
+  return (
+    <Dropdown
+      options={manyOptions}
+      value={value}
+      onChange={setValue}
+      searchable  // 대용량에서는 검색 필수
+      virtualized  // 가상화 활성화
+      itemHeight={40}  // 각 아이템 높이 (픽셀)
+      maxHeight={300}  // 메뉴 최대 높이
+      placeholder="1000개 옵션에서 검색"
+    />
+  );
+}
+```
+
+### 커스텀 옵션 렌더링
+```tsx
+function CustomRenderComponent() {
+  const [value, setValue] = useState<string>();
+
+  const priorityOptions: DropdownOption<string>[] = [
+    { label: 'High Priority', value: 'high', description: 'Urgent task' },
+    { label: 'Medium Priority', value: 'medium', description: 'Normal task' },
+    { label: 'Low Priority', value: 'low', description: 'Can wait' },
+  ];
+
+  return (
+    <Dropdown
+      options={priorityOptions}
+      value={value}
+      onChange={setValue}
+      placeholder="우선순위 선택"
+      renderOption={(option, isSelected) => (
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'space-between',
+          padding: '8px 0'
+        }}>
+          <div>
+            <div style={{ fontWeight: isSelected ? 'bold' : 'normal' }}>
+              {option.label}
+            </div>
+            <div style={{ fontSize: '0.75rem', opacity: 0.7 }}>
+              {option.description}
+            </div>
+          </div>
+          <div style={{ 
+            width: '8px', 
+            height: '8px', 
+            borderRadius: '50%',
+            backgroundColor: getPriorityColor(option.value)
+          }} />
+        </div>
+      )}
+      renderValue={(value, option) => (
+        <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ 
+            width: '8px', 
+            height: '8px', 
+            borderRadius: '50%',
+            backgroundColor: getPriorityColor(value)
+          }} />
+          {option?.label}
+        </span>
+      )}
+    />
+  );
+}
+```
+
+### 포지션 및 크기 설정
+```tsx
+function SizesAndPositionsComponent() {
+  const [value, setValue] = useState<string>();
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      {/* 다양한 크기 */}
+      <div>
+        <h4>크기 옵션:</h4>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'end' }}>
+          <Dropdown options={options} size="small" placeholder="Small" />
+          <Dropdown options={options} size="medium" placeholder="Medium" />
+          <Dropdown options={options} size="large" placeholder="Large" />
+        </div>
+      </div>
+
+      {/* 전체 너비 */}
+      <Dropdown 
+        options={options} 
+        fullWidth 
+        placeholder="전체 너비 드롭다운" 
+      />
+
+      {/* 메뉴 포지션 */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+        <Dropdown options={options} position="bottom-start" placeholder="Bottom Start" />
+        <Dropdown options={options} position="bottom-end" placeholder="Bottom End" />
+        <Dropdown options={options} position="top-start" placeholder="Top Start" />
+        <Dropdown options={options} position="top-end" placeholder="Top End" />
+      </div>
+
+      {/* 자동 포지션 (공간에 따라) */}
+      <Dropdown 
+        options={options} 
+        position="auto" 
+        placeholder="자동 위치 조정" 
+      />
+    </div>
+  );
+}
+```
+
+### 상태 관리
+```tsx
+function StateManagementComponent() {
+  const [value, setValue] = useState<string>();
+  const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  
+  const handleAsyncLoad = async () => {
+    setLoading(true);
+    try {
+      // API 호출 시뮬레이션
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      setValue('apple');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      {/* 로딩 상태 */}
+      <Dropdown
+        options={loading ? [] : options}
+        value={value}
+        onChange={setValue}
+        loading={loading}
+        placeholder={loading ? "로딩 중..." : "과일 선택"}
+      />
+
+      {/* 에러 상태 */}
+      <Dropdown
+        options={options}
+        error={true}
+        placeholder="에러 상태"
+      />
+
+      {/* 비활성화 상태 */}
+      <Dropdown
+        options={options}
+        disabled={true}
+        value="apple"
+        placeholder="비활성화됨"
+      />
+
+      {/* 외부 제어 열림 상태 */}
+      <div>
+        <Button onClick={() => setIsOpen(!isOpen)}>
+          드롭다운 {isOpen ? '닫기' : '열기'}
+        </Button>
+        <Dropdown
+          options={options}
+          open={isOpen}
+          onOpenChange={setIsOpen}
+          placeholder="외부 제어"
+        />
+      </div>
+
+      <Button onClick={handleAsyncLoad} disabled={loading}>
+        비동기 로드 테스트
+      </Button>
+    </div>
+  );
+}
+```
+
+### useDropdown Hook 활용
+```tsx
+import { useDropdown } from 'mbsw-ui-kit';
+
+function CustomDropdownComponent() {
+  const dropdown = useDropdown({
+    options,
+    onChange: (value) => console.log('Selected:', value),
+    onSearch: (query) => console.log('Searching:', query),
+  });
+
+  return (
+    <div>
+      <button 
+        onClick={dropdown.toggle}
+        onKeyDown={dropdown.handleKeyDown}
+        {...dropdown.getAriaProps()}
+      >
+        커스텀 트리거 버튼 {dropdown.isOpen ? '▲' : '▼'}
+      </button>
+      
+      {dropdown.isOpen && (
+        <div>
+          <input
+            type="text"
+            value={dropdown.searchQuery}
+            onChange={(e) => dropdown.setSearchQuery(e.target.value)}
+            placeholder="검색..."
+          />
+          <ul>
+            {dropdown.filteredOptions.map((option, index) => (
+              <li 
+                key={option.value}
+                onClick={() => dropdown.selectOption(option)}
+                style={{ 
+                  background: dropdown.highlightedIndex === index ? '#f0f0f0' : 'white'
+                }}
+              >
+                {option.label}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      
+      <p>선택됨: {dropdown.selectedValues.join(', ')}</p>
+    </div>
+  );
+}
+```
+
+### 접근성과 키보드 네비게이션
+```tsx
+function AccessibleComponent() {
+  const [value, setValue] = useState<string>();
+
+  return (
+    <div>
+      <label id="fruit-label">좋아하는 과일:</label>
+      <Dropdown
+        options={options}
+        value={value}
+        onChange={setValue}
+        aria-label="과일 선택 드롭다운"
+        aria-describedby="fruit-help"
+        placeholder="키보드로 조작 가능"
+      />
+      <div id="fruit-help" style={{ fontSize: '0.875rem', color: '#666' }}>
+        화살표 키로 이동, Enter로 선택, Escape로 닫기, 타이핑으로 검색
+      </div>
+    </div>
+  );
+}
+```
+
+### 실용적인 폼 통합
+```tsx
+function FormIntegrationComponent() {
+  const [formData, setFormData] = useState({
+    category: '',
+    priority: '',
+    assignees: [] as string[],
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('폼 데이터:', formData);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        {/* 단일 선택 */}
+        <div>
+          <label>카테고리 *</label>
+          <Dropdown
+            options={categoryOptions}
+            value={formData.category}
+            onChange={(value) => setFormData({...formData, category: value || ''})}
+            placeholder="카테고리 선택"
+            error={!formData.category}
+          />
+        </div>
+
+        {/* 검색 가능한 단일 선택 */}
+        <div>
+          <label>우선순위</label>
+          <Dropdown
+            options={priorityOptions}
+            value={formData.priority}
+            onChange={(value) => setFormData({...formData, priority: value || ''})}
+            searchable
+            placeholder="우선순위 검색 및 선택"
+          />
+        </div>
+
+        {/* 다중 선택 */}
+        <div>
+          <label>담당자들</label>
+          <Dropdown
+            options={userOptions}
+            values={formData.assignees}
+            onMultiChange={(values) => setFormData({...formData, assignees: values})}
+            multiple
+            searchable
+            showTags
+            maxTags={2}
+            placeholder="담당자 검색 및 선택"
+          />
+        </div>
+
+        <Button type="submit" disabled={!formData.category}>
+          저장
+        </Button>
+      </div>
+    </form>
+  );
+}
+```
+
 ## 🏗️ Layout 컴포넌트
 
 ### 기본 레이아웃
@@ -2476,5 +2952,406 @@ const customTheme = {
 - Firefox 88+
 - Safari 14+
 - Edge 90+
+
+## 📝 Typography 컴포넌트
+
+### 기본 Typography 사용법
+```tsx
+import { Typography } from 'mbsw-ui-kit';
+
+function MyComponent() {
+  return (
+    <div>
+      <Typography variant="h1">메인 제목</Typography>
+      <Typography variant="body1">본문 텍스트 내용입니다.</Typography>
+      <Typography variant="caption" color="secondary">
+        부가 설명 텍스트
+      </Typography>
+    </div>
+  );
+}
+```
+
+### 헤딩 계층 구조
+```tsx
+function HeadingExample() {
+  return (
+    <article>
+      <Typography variant="h1">문서 제목</Typography>
+      <Typography variant="h2">주요 섹션</Typography>
+      <Typography variant="h3">하위 섹션</Typography>
+      <Typography variant="h4">세부 항목</Typography>
+      <Typography variant="h5">상세 내용</Typography>
+      <Typography variant="h6">마지막 레벨</Typography>
+    </article>
+  );
+}
+```
+
+### 텍스트 변형 및 색상
+```tsx
+function TextVariantsExample() {
+  return (
+    <div>
+      {/* 텍스트 변형 */}
+      <Typography variant="subtitle1">주요 부제목</Typography>
+      <Typography variant="subtitle2">보조 부제목</Typography>
+      <Typography variant="body1">일반 본문 텍스트</Typography>
+      <Typography variant="body2">작은 본문 텍스트</Typography>
+      <Typography variant="caption">캡션 텍스트</Typography>
+      <Typography variant="overline">오버라인 텍스트</Typography>
+      
+      {/* 색상 변형 */}
+      <Typography color="primary">기본 색상</Typography>
+      <Typography color="secondary">보조 색상</Typography>
+      <Typography color="disabled">비활성화 색상</Typography>
+      <Typography color="success">성공 메시지</Typography>
+      <Typography color="warning">경고 메시지</Typography>
+      <Typography color="error">에러 메시지</Typography>
+      <Typography color="info">정보 메시지</Typography>
+    </div>
+  );
+}
+```
+
+### 텍스트 정렬 및 가중치
+```tsx
+function TextStylingExample() {
+  return (
+    <div>
+      {/* 텍스트 정렬 */}
+      <Typography align="left">왼쪽 정렬</Typography>
+      <Typography align="center">중앙 정렬</Typography>
+      <Typography align="right">오른쪽 정렬</Typography>
+      <Typography align="justify">양쪽 정렬 텍스트</Typography>
+      
+      {/* 폰트 가중치 */}
+      <Typography weight="normal">일반 굵기</Typography>
+      <Typography weight="medium">중간 굵기</Typography>
+      <Typography weight="semibold">약간 굵게</Typography>
+      <Typography weight="bold">굵게</Typography>
+    </div>
+  );
+}
+```
+
+### 텍스트 장식 및 스타일
+```tsx
+function TextDecorationExample() {
+  return (
+    <div>
+      <Typography underline>밑줄 텍스트</Typography>
+      <Typography strikeThrough>취소선 텍스트</Typography>
+      <Typography italic>기울임 텍스트</Typography>
+      <Typography underline strikeThrough>
+        복합 장식 텍스트
+      </Typography>
+      <Typography italic weight="bold" color="primary">
+        다중 스타일 조합
+      </Typography>
+    </div>
+  );
+}
+```
+
+### 텍스트 말줄임표 및 줄 제한
+```tsx
+function TruncationExample() {
+  return (
+    <div style={{ maxWidth: '300px' }}>
+      {/* 한 줄 말줄임표 */}
+      <Typography truncate>
+        이것은 매우 긴 텍스트입니다. 컨테이너 너비를 초과하면 말줄임표로 표시됩니다.
+      </Typography>
+      
+      {/* 여러 줄 말줄임표 */}
+      <Typography maxLines={2}>
+        이것은 여러 줄에 걸친 긴 텍스트입니다. 지정된 줄 수를 초과하면 
+        말줄임표로 표시됩니다. 카드나 미리보기에서 유용합니다.
+      </Typography>
+      
+      <Typography maxLines={3}>
+        더 긴 텍스트 내용으로 3줄까지 표시하는 예제입니다. 
+        이런 방식으로 일관된 레이아웃을 유지하면서 텍스트 길이를 제한할 수 있습니다.
+        사용자는 필요에 따라 더 보기 버튼을 클릭할 수 있습니다.
+      </Typography>
+    </div>
+  );
+}
+```
+
+### 코드 텍스트
+```tsx
+function CodeExample() {
+  return (
+    <div>
+      {/* 인라인 코드 */}
+      <Typography variant="body1">
+        변수를 선언할 때는 <Typography variant="inlineCode" as="span">
+          const variable = true;
+        </Typography> 형식을 사용하세요.
+      </Typography>
+      
+      {/* 코드 블록 */}
+      <Typography variant="code">
+        {`function greet(name: string): string {
+  return \`Hello, \${name}!\`;
+}
+
+const message = greet('World');
+console.log(message);`}
+      </Typography>
+    </div>
+  );
+}
+```
+
+## 🏷️ Badge 컴포넌트
+
+### 기본 Badge 사용법
+```tsx
+import { Badge } from 'mbsw-ui-kit';
+
+function MyComponent() {
+  return (
+    <div>
+      <Badge color="primary">New</Badge>
+      <Badge color="success">Active</Badge>
+      <Badge color="error" count={5} />
+    </div>
+  );
+}
+```
+
+### Badge 변형
+```tsx
+function BadgeVariants() {
+  return (
+    <div>
+      {/* 기본 채워진 배지 */}
+      <Badge variant="filled" color="primary">Filled</Badge>
+      
+      {/* 윤곽선 배지 */}
+      <Badge variant="outlined" color="primary">Outlined</Badge>
+      
+      {/* 부드러운 배지 */}
+      <Badge variant="soft" color="primary">Soft</Badge>
+      
+      {/* 점 배지 */}
+      <Badge variant="dot" color="success" />
+    </div>
+  );
+}
+```
+
+### 색상 및 크기
+```tsx
+function BadgeColorsAndSizes() {
+  return (
+    <div>
+      {/* 다양한 색상 */}
+      <Badge color="primary">Primary</Badge>
+      <Badge color="secondary">Secondary</Badge>
+      <Badge color="success">Success</Badge>
+      <Badge color="warning">Warning</Badge>
+      <Badge color="error">Error</Badge>
+      <Badge color="info">Info</Badge>
+      
+      {/* 다양한 크기 */}
+      <Badge size="small">Small</Badge>
+      <Badge size="medium">Medium</Badge>
+      <Badge size="large">Large</Badge>
+    </div>
+  );
+}
+```
+
+### 카운트 배지
+```tsx
+function CountBadges() {
+  return (
+    <div>
+      {/* 기본 카운트 */}
+      <Badge count={5} />
+      
+      {/* 최대값 설정 */}
+      <Badge count={100} maxCount={99} />  {/* 99+ 표시 */}
+      
+      {/* 0 표시 */}
+      <Badge count={0} showZero />
+      
+      {/* 조건부 표시 */}
+      <Badge count={messageCount} visible={messageCount > 0} />
+    </div>
+  );
+}
+```
+
+### 위치가 지정된 오버레이 배지
+```tsx
+import { Badge, Button } from 'mbsw-ui-kit';
+
+function OverlayBadges() {
+  return (
+    <div style={{ display: 'flex', gap: '2rem' }}>
+      {/* 상단 우측 */}
+      <div style={{ position: 'relative', display: 'inline-block' }}>
+        <Button>알림</Button>
+        <Badge count={3} position="top-right" color="error" />
+      </div>
+      
+      {/* 상단 좌측 */}
+      <div style={{ position: 'relative', display: 'inline-block' }}>
+        <Button>메시지</Button>
+        <Badge count={12} position="top-left" color="primary" />
+      </div>
+      
+      {/* 하단 우측 점 배지 */}
+      <div style={{ position: 'relative', display: 'inline-block' }}>
+        <Button>설정</Button>
+        <Badge dot position="bottom-right" color="success" />
+      </div>
+    </div>
+  );
+}
+```
+
+### BadgeWrapper 활용
+```tsx
+import { BadgeWrapper, Button } from 'mbsw-ui-kit';
+
+function BadgeWrapperExample() {
+  return (
+    <div>
+      {/* 간편한 배지 래핑 */}
+      <BadgeWrapper 
+        badge={{ count: 5, position: 'top-right', color: 'error' }}
+      >
+        <Button>받은편지함</Button>
+      </BadgeWrapper>
+      
+      {/* 아바타에 온라인 상태 표시 */}
+      <BadgeWrapper 
+        badge={{ dot: true, position: 'bottom-right', color: 'success' }}
+        inline
+      >
+        <img 
+          src="/avatar.jpg" 
+          alt="프로필"
+          style={{ width: 40, height: 40, borderRadius: '50%' }}
+        />
+      </BadgeWrapper>
+    </div>
+  );
+}
+```
+
+### 삭제 가능한 배지
+```tsx
+function ClosableBadges() {
+  const [tags, setTags] = useState(['React', 'TypeScript', 'UI Kit']);
+  
+  const handleRemoveTag = (tagToRemove: string) => {
+    setTags(tags.filter(tag => tag !== tagToRemove));
+  };
+
+  return (
+    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+      {tags.map(tag => (
+        <Badge
+          key={tag}
+          closable
+          onClose={() => handleRemoveTag(tag)}
+          color="primary"
+          variant="soft"
+        >
+          {tag}
+        </Badge>
+      ))}
+    </div>
+  );
+}
+```
+
+### 아이콘과 함께 사용
+```tsx
+function BadgesWithIcons() {
+  return (
+    <div>
+      <Badge icon={<span>🎉</span>} color="primary">축하</Badge>
+      <Badge icon={<span>⚠️</span>} color="warning">주의</Badge>
+      <Badge icon={<span>✅</span>} color="success">완료</Badge>
+      <Badge icon={<span>🔥</span>} color="error">인기</Badge>
+    </div>
+  );
+}
+```
+
+### 실제 사용 예제
+```tsx
+function RealWorldExample() {
+  const [notifications, setNotifications] = useState(12);
+  const [messages, setMessages] = useState(3);
+  const [isOnline, setIsOnline] = useState(true);
+
+  return (
+    <div className="header">
+      {/* 네비게이션 바 */}
+      <nav style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        {/* 알림 */}
+        <BadgeWrapper 
+          badge={{ 
+            count: notifications, 
+            position: 'top-right', 
+            color: 'error',
+            visible: notifications > 0 
+          }}
+        >
+          <Button variant="ghost" size="small">
+            🔔
+          </Button>
+        </BadgeWrapper>
+        
+        {/* 메시지 */}
+        <BadgeWrapper 
+          badge={{ 
+            count: messages, 
+            position: 'top-right', 
+            color: 'primary',
+            maxCount: 9
+          }}
+        >
+          <Button variant="ghost" size="small">
+            💬
+          </Button>
+        </BadgeWrapper>
+        
+        {/* 사용자 프로필 */}
+        <BadgeWrapper 
+          badge={{ 
+            dot: true, 
+            position: 'bottom-right', 
+            color: isOnline ? 'success' : 'secondary'
+          }}
+          inline
+        >
+          <div className="avatar">
+            <img src="/user.jpg" alt="프로필" />
+          </div>
+        </BadgeWrapper>
+      </nav>
+      
+      {/* 상태 배지들 */}
+      <div className="status-badges">
+        <Badge variant="soft" color="success">온라인</Badge>
+        <Badge variant="outlined" color="warning">베타</Badge>
+        <Badge variant="filled" color="info" closable>
+          새로운 기능
+        </Badge>
+      </div>
+    </div>
+  );
+}
+```
 
 이 가이드를 통해 MBSW UI Kit를 효과적으로 활용하여 일관성 있고 접근 가능한 사용자 인터페이스를 구축할 수 있습니다.

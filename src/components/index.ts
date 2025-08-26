@@ -6,3 +6,6 @@ export * from './Table';
 export * from './Card';
 export * from './LoadingSpinner';
 export * from './Toast';
+export * from './Dropdown';
+export * from './Typography';
+export * from './Badge';
