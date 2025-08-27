@@ -1,6 +1,7 @@
 import React, { forwardRef } from 'react';
 import { BadgeProps } from './types';
-import { StyledBadge, BadgeContent, CloseButton, CloseIcon } from './styles';
+import { StyledBadge, BadgeContent, CloseButton } from './styles';
+import { CloseIcon } from './icons';
 
 /**
  * Badge component for displaying status indicators, counts, and labels.

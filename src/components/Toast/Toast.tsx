@@ -11,12 +11,14 @@ import {
   ToastActionButton,
   ToastCloseButton,
   ToastProgress,
+} from './styles';
+import {
   SuccessIcon,
   ErrorIcon,
   WarningIcon,
   InfoIcon,
   CloseIcon,
-} from './styles';
+} from './icons';
 
 // 타입별 기본 아이콘
 const getDefaultIcon = (type: string) => {

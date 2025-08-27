@@ -31,9 +31,4 @@ export {
   ToastActionButton,
   ToastCloseButton,
   ToastProgress,
-  SuccessIcon,
-  ErrorIcon,
-  WarningIcon,
-  InfoIcon,
-  CloseIcon,
 } from './styles';

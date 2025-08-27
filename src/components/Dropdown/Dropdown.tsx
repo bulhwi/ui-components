@@ -28,11 +28,8 @@ import {
   Checkbox,
   EmptyState,
   LoadingState,
-  ChevronDownIcon,
-  CheckIcon,
-  XIcon,
-  SearchIcon,
 } from './styles';
+import { ChevronDownIcon, CheckIcon, XIcon, SearchIcon } from './icons';
 
 // 옵션이 그룹인지 확인하는 타입 가드
 function isOptionGroup<T>(item: DropdownOption<T> | DropdownOptionGroup<T>): item is DropdownOptionGroup<T> {
