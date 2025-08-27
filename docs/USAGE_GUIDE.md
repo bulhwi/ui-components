@@ -3354,4 +3354,348 @@ function RealWorldExample() {
 }
 ```
 
+## 💬 Tooltip 컴포넌트
+
+### 기본 Tooltip 사용법
+```tsx
+import { Tooltip } from 'mbsw-ui-kit';
+
+function MyComponent() {
+  return (
+    <div>
+      <Tooltip content="도움말 텍스트">
+        <Button>마우스를 올려보세요</Button>
+      </Tooltip>
+    </div>
+  );
+}
+```
+
+### Tooltip 위치 설정
+```tsx
+function TooltipPositions() {
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '2rem' }}>
+      {/* 기본 위치 */}
+      <Tooltip content="상단 툴팁" position="top">
+        <Button>Top</Button>
+      </Tooltip>
+      
+      <Tooltip content="하단 툴팁" position="bottom">
+        <Button>Bottom</Button>
+      </Tooltip>
+      
+      <Tooltip content="왼쪽 툴팁" position="left">
+        <Button>Left</Button>
+      </Tooltip>
+      
+      <Tooltip content="오른쪽 툴팁" position="right">
+        <Button>Right</Button>
+      </Tooltip>
+      
+      {/* 세부 위치 */}
+      <Tooltip content="상단 시작점" position="top-start">
+        <Button>Top Start</Button>
+      </Tooltip>
+      
+      <Tooltip content="상단 끝점" position="top-end">
+        <Button>Top End</Button>
+      </Tooltip>
+      
+      {/* 자동 위치 조정 */}
+      <Tooltip content="자동으로 최적 위치 선택" position="auto">
+        <Button>Auto</Button>
+      </Tooltip>
+    </div>
+  );
+}
+```
+
+### 트리거 방식
+```tsx
+function TooltipTriggers() {
+  return (
+    <div style={{ display: 'flex', gap: '1rem' }}>
+      {/* 호버 (기본) */}
+      <Tooltip content="마우스 호버로 표시" trigger="hover">
+        <Button>Hover</Button>
+      </Tooltip>
+      
+      {/* 클릭 */}
+      <Tooltip content="클릭해서 토글" trigger="click">
+        <Button>Click</Button>
+      </Tooltip>
+      
+      {/* 포커스 */}
+      <Tooltip content="포커스할 때 표시" trigger="focus">
+        <Button>Focus</Button>
+      </Tooltip>
+    </div>
+  );
+}
+```
+
+### 테마 및 스타일링
+```tsx
+function TooltipThemes() {
+  return (
+    <div style={{ display: 'flex', gap: '1rem' }}>
+      {/* 라이트 테마 */}
+      <Tooltip content="밝은 테마 툴팁" theme="light">
+        <Button>Light Theme</Button>
+      </Tooltip>
+      
+      {/* 다크 테마 (기본) */}
+      <Tooltip content="어두운 테마 툴팁" theme="dark">
+        <Button>Dark Theme</Button>
+      </Tooltip>
+      
+      {/* 화살표 없는 툴팁 */}
+      <Tooltip content="화살표가 없는 툴팁" showArrow={false}>
+        <Button>No Arrow</Button>
+      </Tooltip>
+      
+      {/* 최대 너비 설정 */}
+      <Tooltip 
+        content="이것은 매우 긴 텍스트입니다. 최대 너비가 설정되어 여러 줄로 표시됩니다."
+        maxWidth={200}
+      >
+        <Button>Max Width</Button>
+      </Tooltip>
+    </div>
+  );
+}
+```
+
+### 지연 시간 설정
+```tsx
+function TooltipDelays() {
+  return (
+    <div style={{ display: 'flex', gap: '1rem' }}>
+      {/* 표시 지연 */}
+      <Tooltip content="500ms 후에 표시됩니다" delayIn={500}>
+        <Button>Delay In</Button>
+      </Tooltip>
+      
+      {/* 숨김 지연 */}
+      <Tooltip content="500ms 후에 숨겨집니다" delayOut={500}>
+        <Button>Delay Out</Button>
+      </Tooltip>
+      
+      {/* 양쪽 지연 */}
+      <Tooltip content="표시/숨김 모두 지연" delayIn={300} delayOut={300}>
+        <Button>Both Delays</Button>
+      </Tooltip>
+    </div>
+  );
+}
+```
+
+### 수동 제어
+```tsx
+function ManualTooltip() {
+  const [isVisible, setIsVisible] = useState(false);
+  
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <div style={{ display: 'flex', gap: '1rem' }}>
+        <Button onClick={() => setIsVisible(true)}>Show</Button>
+        <Button onClick={() => setIsVisible(false)}>Hide</Button>
+        <Button onClick={() => setIsVisible(!isVisible)}>Toggle</Button>
+      </div>
+      
+      <Tooltip 
+        content={`수동으로 제어되는 툴팁 (현재: ${isVisible ? '표시' : '숨김'})`}
+        trigger="manual"
+        visible={isVisible}
+        onVisibilityChange={setIsVisible}
+      >
+        <Button>Target Element</Button>
+      </Tooltip>
+    </div>
+  );
+}
+```
+
+## 📄 Pagination 컴포넌트
+
+Pagination은 대용량 데이터를 페이지 단위로 나누어 탐색할 수 있는 컴포넌트입니다.
+
+### 기본 사용법
+```tsx
+import { Pagination } from 'mbsw-ui-kit';
+import { useState } from 'react';
+
+function PaginationExample() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
+
+  return (
+    <Pagination
+      current={currentPage}
+      total={1000}
+      pageSize={pageSize}
+      onChange={(page, size) => {
+        setCurrentPage(page);
+        setPageSize(size);
+      }}
+    />
+  );
+}
+```
+
+### 페이지 크기 선택기 포함
+```tsx
+function PaginationWithSizeChanger() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
+
+  return (
+    <Pagination
+      current={currentPage}
+      total={1000}
+      pageSize={pageSize}
+      showSizeChanger
+      pageSizeOptions={[10, 20, 50, 100]}
+      onChange={(page, size) => {
+        setCurrentPage(page);
+        setPageSize(size);
+      }}
+      onShowSizeChange={(page, size) => {
+        console.log('페이지 크기 변경:', size);
+      }}
+    />
+  );
+}
+```
+
+### 완전한 기능의 페이지네이션
+```tsx
+function FullFeaturedPagination() {
+  const [currentPage, setCurrentPage] = useState(5);
+  const [pageSize, setPageSize] = useState(25);
+
+  return (
+    <Pagination
+      current={currentPage}
+      total={2000}
+      pageSize={pageSize}
+      showSizeChanger
+      showTotal
+      showQuickJumper
+      showFirstLast
+      pageSizeOptions={[10, 25, 50, 100]}
+      onChange={(page, size) => {
+        setCurrentPage(page);
+        setPageSize(size);
+      }}
+    />
+  );
+}
+```
+
+### 간단한 페이지네이션 (Simple 모드)
+```tsx
+function SimplePagination() {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  return (
+    <Pagination
+      current={currentPage}
+      total={500}
+      pageSize={20}
+      variant="simple"
+      showTotal={(total, range) => `${range[0]}-${range[1]} / ${total}`}
+      onChange={(page) => setCurrentPage(page)}
+    />
+  );
+}
+```
+
+### 커스텀 정보 표시
+```tsx
+function CustomInfoPagination() {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  return (
+    <Pagination
+      current={currentPage}
+      total={1000}
+      pageSize={20}
+      showTotal={(total, range) => 
+        `총 ${total}개 항목 중 ${range[0]}-${range[1]}번째`
+      }
+      onChange={(page) => setCurrentPage(page)}
+    />
+  );
+}
+```
+
+### 크기별 페이지네이션
+```tsx
+// 작은 크기
+<Pagination
+  current={1}
+  total={100}
+  pageSize={10}
+  size="sm"
+  onChange={handleChange}
+/>
+
+// 기본 크기
+<Pagination
+  current={1}
+  total={100}
+  pageSize={10}
+  size="md"
+  onChange={handleChange}
+/>
+
+// 큰 크기
+<Pagination
+  current={1}
+  total={100}
+  pageSize={10}
+  size="lg"
+  onChange={handleChange}
+/>
+```
+
+### 페이지 점프 기능
+```tsx
+function PaginationWithJumper() {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  return (
+    <Pagination
+      current={currentPage}
+      total={1000}
+      pageSize={20}
+      showQuickJumper
+      onChange={(page) => {
+        setCurrentPage(page);
+        console.log(`${page}페이지로 이동`);
+      }}
+    />
+  );
+}
+```
+
+### 비활성화된 페이지네이션
+```tsx
+function DisabledPagination() {
+  return (
+    <Pagination
+      current={5}
+      total={500}
+      pageSize={20}
+      disabled
+      showSizeChanger
+      showQuickJumper
+      onChange={() => {}}
+    />
+  );
+}
+```
+
 이 가이드를 통해 MBSW UI Kit를 효과적으로 활용하여 일관성 있고 접근 가능한 사용자 인터페이스를 구축할 수 있습니다.

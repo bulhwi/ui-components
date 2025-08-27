@@ -9,3 +9,5 @@ export * from './Toast';
 export * from './Dropdown';
 export * from './Typography';
 export * from './Badge';
+export * from './Tooltip';
+export * from './Pagination';

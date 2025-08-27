@@ -1095,6 +1095,544 @@ Badge 컴포넌트는 접근성을 고려하여 설계되었습니다:
 </Badge>
 ```
 
+## Tooltip
+
+Tooltip 컴포넌트는 추가 정보나 도움말을 표시하기 위한 오버레이 컴포넌트입니다.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| content | `ReactNode` | - | 툴팁에 표시할 콘텐츠 |
+| children | `ReactNode` | - | 대상 요소 |
+| position | `TooltipPosition` | `'top'` | 툴팁 위치 |
+| trigger | `TooltipTrigger` | `'hover'` | 툴팁 트리거 방식 |
+| theme | `TooltipTheme` | `'dark'` | 툴팁 테마 |
+| visible | `boolean` | - | 툴팁 가시성 (수동 제어) |
+| delayIn | `number` | `0` | 표시 지연 시간 (ms) |
+| delayOut | `number` | `0` | 숨김 지연 시간 (ms) |
+| showArrow | `boolean` | `true` | 화살표 표시 여부 |
+| maxWidth | `number` | `320` | 최대 너비 (px) |
+| disabled | `boolean` | `false` | 비활성화 여부 |
+| zIndex | `number` | `9999` | Z-index 값 |
+| closeOnOutsideClick | `boolean` | `true` | 외부 클릭시 닫기 |
+| closeOnEscape | `boolean` | `true` | ESC 키로 닫기 |
+| offset | `number` | `8` | 대상 요소로부터의 거리 |
+| className | `string` | - | 추가 CSS 클래스 |
+| onVisibilityChange | `function` | - | 가시성 변경 콜백 |
+
+### Types
+
+```tsx
+type TooltipPosition = 
+  | 'top' | 'bottom' | 'left' | 'right'
+  | 'top-start' | 'top-end'
+  | 'bottom-start' | 'bottom-end'
+  | 'left-start' | 'left-end'
+  | 'right-start' | 'right-end'
+  | 'auto';
+
+type TooltipTrigger = 'hover' | 'click' | 'focus' | 'manual';
+
+type TooltipTheme = 'light' | 'dark';
+```
+
+### 기본 사용법
+
+```tsx
+import { Tooltip } from 'mbsw-ui-kit';
+
+// 기본 호버 툴팁
+<Tooltip content="도움말 텍스트">
+  <Button>버튼</Button>
+</Tooltip>
+
+// 클릭 툴팁
+<Tooltip content="클릭해서 표시" trigger="click">
+  <Button>클릭 툴팁</Button>
+</Tooltip>
+
+// 수동 제어
+<Tooltip
+  content="수동 제어 툴팁"
+  trigger="manual"
+  visible={isVisible}
+  onVisibilityChange={setIsVisible}
+>
+  <Button>대상</Button>
+</Tooltip>
+```
+
+### 위치 설정
+
+```tsx
+// 기본 위치
+<Tooltip content="상단 툴팁" position="top">
+  <Button>Top</Button>
+</Tooltip>
+
+// 세부 위치
+<Tooltip content="상단 시작" position="top-start">
+  <Button>Top Start</Button>
+</Tooltip>
+
+// 자동 위치 조정
+<Tooltip content="자동 위치" position="auto">
+  <Button>Auto Position</Button>
+</Tooltip>
+```
+
+### 테마 및 스타일링
+
+```tsx
+// 라이트 테마
+<Tooltip content="밝은 테마" theme="light">
+  <Button>Light</Button>
+</Tooltip>
+
+// 다크 테마 (기본)
+<Tooltip content="어두운 테마" theme="dark">
+  <Button>Dark</Button>
+</Tooltip>
+
+// 화살표 없음
+<Tooltip content="화살표 없음" showArrow={false}>
+  <Button>No Arrow</Button>
+</Tooltip>
+
+// 커스텀 너비
+<Tooltip content="긴 텍스트..." maxWidth={200}>
+  <Button>Custom Width</Button>
+</Tooltip>
+```
+
+### 지연 시간
+
+```tsx
+// 표시 지연
+<Tooltip content="지연된 표시" delayIn={500}>
+  <Button>Delay In</Button>
+</Tooltip>
+
+// 숨김 지연
+<Tooltip content="지연된 숨김" delayOut={500}>
+  <Button>Delay Out</Button>
+</Tooltip>
+```
+
+### 복합 콘텐츠
+
+```tsx
+<Tooltip 
+  content={
+    <div>
+      <h4>제목</h4>
+      <p>설명 텍스트</p>
+      <ul>
+        <li>항목 1</li>
+        <li>항목 2</li>
+      </ul>
+    </div>
+  }
+  maxWidth={250}
+>
+  <Button>Rich Content</Button>
+</Tooltip>
+```
+
+## useTooltip Hook
+
+useTooltip 훅은 커스텀 툴팁 구현을 위한 로직을 제공합니다.
+
+### Parameters
+
+```tsx
+interface UseTooltipOptions {
+  trigger: TooltipTrigger;
+  delayIn: number;
+  delayOut: number;
+  visible?: boolean;
+  disabled: boolean;
+  closeOnOutsideClick: boolean;
+  closeOnEscape: boolean;
+  onVisibilityChange?: (visible: boolean) => void;
+}
+```
+
+### Return Value
+
+```tsx
+interface UseTooltipReturn {
+  isVisible: boolean;
+  targetRef: React.RefObject<HTMLElement>;
+  tooltipRef: React.RefObject<HTMLDivElement>;
+  show: () => void;
+  hide: () => void;
+  toggle: () => void;
+  targetProps: {
+    ref: React.RefObject<HTMLElement>;
+    onMouseEnter?: () => void;
+    onMouseLeave?: () => void;
+    onClick?: () => void;
+    onFocus?: () => void;
+    onBlur?: () => void;
+    onKeyDown?: (event: React.KeyboardEvent) => void;
+    'aria-describedby'?: string;
+  };
+  tooltipProps: {
+    ref: React.RefObject<HTMLDivElement>;
+    id: string;
+    role: string;
+  };
+}
+```
+
+### 사용법
+
+```tsx
+import { useTooltip } from 'mbsw-ui-kit';
+
+function CustomTooltip() {
+  const tooltip = useTooltip({
+    trigger: 'hover',
+    delayIn: 200,
+    delayOut: 100,
+    disabled: false,
+    closeOnOutsideClick: true,
+    closeOnEscape: true,
+    onVisibilityChange: (visible) => console.log('Tooltip:', visible),
+  });
+
+  return (
+    <div>
+      <button {...tooltip.targetProps}>
+        Custom Button
+      </button>
+      
+      {tooltip.isVisible && (
+        <div 
+          {...tooltip.tooltipProps}
+          style={{
+            position: 'absolute',
+            background: '#333',
+            color: 'white',
+            padding: '8px',
+            borderRadius: '4px',
+          }}
+        >
+          Custom Tooltip
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+### 위치 계산
+
+툴팁은 뷰포트 경계를 자동으로 감지하고 최적의 위치를 선택합니다:
+
+1. **우선순위**: 지정된 위치 → 대안 위치 → 폴백 위치
+2. **자동 조정**: 화면 밖으로 나가지 않도록 위치 자동 조정
+3. **화살표 위치**: 툴팁 위치에 따라 화살표 자동 배치
+4. **경계 클램핑**: 필요시 뷰포트 내부로 위치 강제 조정
+
+### 접근성
+
+Tooltip 컴포넌트는 완전한 접근성을 지원합니다:
+
+```tsx
+// 자동 ARIA 속성
+<Tooltip content="접근 가능한 툴팁">
+  <Button>버튼</Button>  {/* aria-describedby 자동 설정 */}
+</Tooltip>
+
+// 키보드 지원
+// - Enter/Space: 클릭 트리거에서 툴팁 토글
+// - Escape: 툴팁 닫기
+// - Tab: 포커스 트리거에서 툴팁 표시/숨김
+
+// 스크린 리더 지원
+// - role="tooltip" 자동 설정
+// - 적절한 ID 연결
+// - 가시성 상태 관리
+```
+
+## Pagination
+
+Pagination 컴포넌트는 대용량 데이터를 페이지 단위로 나누어 표시하고 탐색할 수 있게 해주는 컴포넌트입니다.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `current` | `number` | - | 현재 페이지 (1부터 시작) |
+| `total` | `number` | - | 전체 항목 수 |
+| `pageSize` | `number` | `10` | 페이지당 항목 수 |
+| `pageSizeOptions` | `number[]` | `[10, 20, 50, 100]` | 페이지 크기 선택 옵션 |
+| `showSizeChanger` | `boolean` | `false` | 페이지 크기 선택기 표시 |
+| `showTotal` | `boolean \| function` | `false` | 총 항목 정보 표시 |
+| `showQuickJumper` | `boolean` | `false` | 빠른 페이지 이동 입력 표시 |
+| `variant` | `'default' \| 'simple' \| 'compact'` | `'default'` | 페이지네이션 변형 |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | 컴포넌트 크기 |
+| `disabled` | `boolean` | `false` | 비활성화 상태 |
+| `simple` | `boolean` | `false` | 간단한 모드 (이전/다음만) |
+| `hideOnSinglePage` | `boolean` | `false` | 단일 페이지일 때 숨김 |
+| `showFirstLast` | `boolean` | `false` | 첫/마지막 페이지 버튼 표시 |
+| `prevText` | `ReactNode` | - | 이전 버튼 텍스트 |
+| `nextText` | `ReactNode` | - | 다음 버튼 텍스트 |
+| `firstText` | `ReactNode` | - | 첫 페이지 버튼 텍스트 |
+| `lastText` | `ReactNode` | - | 마지막 페이지 버튼 텍스트 |
+| `siblingCount` | `number` | `1` | 현재 페이지 주변 표시 페이지 수 |
+| `boundaryCount` | `number` | `1` | 경계 페이지 수 |
+| `className` | `string` | - | 추가 CSS 클래스 |
+| `style` | `CSSProperties` | - | 인라인 스타일 |
+| `onChange` | `(page: number, pageSize: number) => void` | - | 페이지 변경 콜백 |
+| `onShowSizeChange` | `(current: number, pageSize: number) => void` | - | 페이지 크기 변경 콜백 |
+| `itemRender` | `function` | - | 커스텀 아이템 렌더러 |
+
+### 기본 사용법
+
+```tsx
+import { Pagination } from 'mbsw-ui-kit';
+import { useState } from 'react';
+
+// 기본 페이지네이션
+function BasicPagination() {
+  const [current, setCurrent] = useState(1);
+  
+  return (
+    <Pagination
+      current={current}
+      total={500}
+      pageSize={20}
+      onChange={(page) => setCurrent(page)}
+    />
+  );
+}
+
+// 페이지 크기 선택기 포함
+<Pagination
+  current={1}
+  total={1000}
+  pageSize={20}
+  showSizeChanger
+  pageSizeOptions={[10, 20, 50, 100]}
+  onChange={(page, size) => {
+    console.log('페이지:', page, '크기:', size);
+  }}
+/>
+
+// 완전한 기능
+<Pagination
+  current={5}
+  total={2000}
+  pageSize={25}
+  showSizeChanger
+  showTotal
+  showQuickJumper
+  showFirstLast
+  onChange={handleChange}
+/>
+```
+
+### 변형 및 크기
+
+```tsx
+// Simple 변형 (이전/다음만)
+<Pagination
+  current={1}
+  total={100}
+  variant="simple"
+  onChange={handleChange}
+/>
+
+// Compact 변형
+<Pagination
+  current={1}
+  total={100}
+  variant="compact"
+  onChange={handleChange}
+/>
+
+// 크기 변형
+<Pagination current={1} total={100} size="sm" onChange={handleChange} />
+<Pagination current={1} total={100} size="md" onChange={handleChange} />
+<Pagination current={1} total={100} size="lg" onChange={handleChange} />
+```
+
+### 커스텀 정보 표시
+
+```tsx
+// 함수형 총 정보
+<Pagination
+  current={1}
+  total={1000}
+  pageSize={20}
+  showTotal={(total, range) => 
+    `총 ${total}개 중 ${range[0]}-${range[1]}번째 표시`
+  }
+  onChange={handleChange}
+/>
+
+// 커스텀 텍스트
+<Pagination
+  current={5}
+  total={500}
+  showFirstLast
+  prevText="이전"
+  nextText="다음"
+  firstText="처음"
+  lastText="끝"
+  onChange={handleChange}
+/>
+```
+
+## usePagination Hook
+
+usePagination 훅은 페이지네이션 상태 관리와 로직을 제공합니다.
+
+### Parameters
+
+```tsx
+interface UsePaginationOptions {
+  total: number;
+  initialPage?: number;
+  initialPageSize?: number;
+  siblingCount?: number;
+  boundaryCount?: number;
+  onChange?: (page: number, pageSize: number) => void;
+  onPageSizeChange?: (pageSize: number, page: number) => void;
+}
+```
+
+### Return Value
+
+```tsx
+interface UsePaginationReturn {
+  currentPage: number;
+  pageSize: number;
+  totalPages: number;
+  hasPrevious: boolean;
+  hasNext: boolean;
+  goToPrevious: () => void;
+  goToNext: () => void;
+  goToFirst: () => void;
+  goToLast: () => void;
+  goToPage: (page: number) => void;
+  changePageSize: (size: number) => void;
+  getVisiblePages: () => (number | 'ellipsis')[];
+  getRangeInfo: () => { start: number; end: number; total: number };
+}
+```
+
+### 사용법
+
+```tsx
+import { usePagination } from 'mbsw-ui-kit';
+
+function CustomPagination() {
+  const pagination = usePagination({
+    total: 1000,
+    initialPage: 1,
+    initialPageSize: 20,
+    onChange: (page, pageSize) => {
+      console.log('페이지 변경:', page, pageSize);
+    },
+  });
+
+  const visiblePages = pagination.getVisiblePages();
+  const rangeInfo = pagination.getRangeInfo();
+
+  return (
+    <div>
+      <div>
+        페이지 {pagination.currentPage} / {pagination.totalPages}
+        ({rangeInfo.start}-{rangeInfo.end} of {rangeInfo.total})
+      </div>
+      
+      <div>
+        <button 
+          onClick={pagination.goToPrevious}
+          disabled={!pagination.hasPrevious}
+        >
+          이전
+        </button>
+        
+        {visiblePages.map((page, index) => (
+          <button
+            key={index}
+            onClick={() => typeof page === 'number' && pagination.goToPage(page)}
+            disabled={page === 'ellipsis'}
+            style={{
+              fontWeight: page === pagination.currentPage ? 'bold' : 'normal'
+            }}
+          >
+            {page === 'ellipsis' ? '...' : page}
+          </button>
+        ))}
+        
+        <button 
+          onClick={pagination.goToNext}
+          disabled={!pagination.hasNext}
+        >
+          다음
+        </button>
+      </div>
+    </div>
+  );
+}
+```
+
+### 페이지 계산 로직
+
+```tsx
+// 페이지 범위 계산 유틸리티
+import { calculatePaginationInfo } from 'mbsw-ui-kit';
+
+const info = calculatePaginationInfo(5, 20, 1000);
+console.log(info);
+// {
+//   totalPages: 50,
+//   start: 81,
+//   end: 100,
+//   hasPrevious: true,
+//   hasNext: true
+// }
+
+// 페이지 크기 옵션 생성
+import { generatePageSizeOptions } from 'mbsw-ui-kit';
+
+const options = generatePageSizeOptions([10, 25, 50, 100]);
+console.log(options); // [10, 25, 50, 100]
+```
+
+### 접근성
+
+Pagination 컴포넌트는 완전한 접근성을 지원합니다:
+
+```tsx
+// 자동 ARIA 속성
+<Pagination
+  current={5}
+  total={500}
+  onChange={handleChange}
+/>
+// - aria-label="Go to page X" 자동 설정
+// - aria-current="page" 현재 페이지에 설정
+// - role="navigation" 네비게이션 역할
+
+// 키보드 지원
+// - Tab: 버튼 간 이동
+// - Enter/Space: 페이지 선택
+// - Arrow Keys: 빠른 이동 (옵션)
+
+// 스크린 리더 지원
+// - 현재 페이지 상태 안내
+// - 총 페이지 수 정보 제공
+// - 페이지 변경 알림
+```
+
 ---
 
 이 API 문서를 통해 각 컴포넌트의 모든 속성과 사용법을 정확히 파악할 수 있습니다. 추가적인 정보가 필요하거나 새로운 컴포넌트가 추가될 때마다 이 문서도 함께 업데이트됩니다.
