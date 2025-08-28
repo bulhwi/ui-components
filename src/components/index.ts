@@ -11,3 +11,4 @@ export * from './Badge';
 export * from './Tooltip';
 export * from './Pagination';
 export * from './Table';
+export * from './Carousel';

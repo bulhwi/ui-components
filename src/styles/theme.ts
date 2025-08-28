@@ -111,3 +111,5 @@ export const darkTheme: Theme = {
     info: '#60a5fa',
   },
 };
+
+export const defaultTheme = lightTheme;
