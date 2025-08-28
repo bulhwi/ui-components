@@ -71,11 +71,12 @@ export const Typography = forwardRef<HTMLElement, TypographyProps>(({
   ...props
 }, ref) => {
   // Use provided 'as' prop or default semantic element
-  const Component = StyledTypography.withComponent(as || getDefaultElement(variant));
+  const elementType = as || getDefaultElement(variant);
 
   return (
-    <Component
+    <StyledTypography
       ref={ref}
+      as={elementType}
       className={className}
       $variant={variant}
       $color={color}
@@ -89,7 +90,7 @@ export const Typography = forwardRef<HTMLElement, TypographyProps>(({
       {...props}
     >
       {children}
-    </Component>
+    </StyledTypography>
   );
 });
 
