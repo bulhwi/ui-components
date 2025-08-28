@@ -30,7 +30,8 @@
       "Bash(npm run test:*)",
       "Bash(npm run clean:*)",
       "Bash(npm run link-local:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "mcp__vooster-ai__add_task"
     ],
     "deny": []
   }
