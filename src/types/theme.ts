@@ -1,19 +1,25 @@
 export interface Theme {
   colors: {
     primary: string;
+    primaryLight: string;
+    primaryDark: string;
     primaryHover: string;
     primaryActive: string;
     secondary: string;
     secondaryHover: string;
     secondaryActive: string;
     background: string;
+    backgroundDisabled: string;
     surface: string;
     text: {
       primary: string;
       secondary: string;
       disabled: string;
     };
+    textLight: string;
+    textInverse: string;
     border: string;
+    borderLight: string;
     shadow: string;
     success: string;
     warning: string;

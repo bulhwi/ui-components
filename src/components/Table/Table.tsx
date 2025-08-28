@@ -304,7 +304,7 @@ export function Table<T = any>({
       </StyledScrollContainer>
 
       {paginationProps && !paginationProps.hideOnSinglePage && (
-        <Pagination {...paginationProps} />
+        <Pagination {...paginationProps} current={paginationProps.current ?? 1} pageSize={paginationProps.pageSize ?? 10} />
       )}
 
       {footer && (

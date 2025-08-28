@@ -271,15 +271,15 @@ export const StyledBadge = styled.span<BadgeStyleProps>`
   transform: ${({ $visible }) => $visible ? 'scale(1)' : 'scale(0)'};
   
   /* Hover effects for clickable badges */
-  ${({ onClick }) => onClick && css`
+  ${({ onClick, $visible }) => onClick && css`
     cursor: pointer;
     
     &:hover {
-      transform: ${({ $visible }) => $visible ? 'scale(1.05)' : 'scale(0)'};
+      transform: ${$visible ? 'scale(1.05)' : 'scale(0)'};
     }
     
     &:active {
-      transform: ${({ $visible }) => $visible ? 'scale(0.95)' : 'scale(0)'};
+      transform: ${$visible ? 'scale(0.95)' : 'scale(0)'};
     }
   `}
   

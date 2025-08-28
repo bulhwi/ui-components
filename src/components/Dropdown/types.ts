@@ -273,7 +273,7 @@ export interface UseDropdownReturn<T = any> {
   /** 검색어 */
   searchQuery: string;
   /** 필터링된 옵션들 */
-  filteredOptions: DropdownOption<T>[];
+  filteredOptions: (DropdownOption<T> | DropdownOptionGroup<T>)[];
   /** 열기/닫기 토글 */
   toggle: () => void;
   /** 열기 */

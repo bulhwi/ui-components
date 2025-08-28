@@ -287,7 +287,7 @@ export const StyledCardContent = styled.div`
   
   p {
     margin: 0 0 ${({ theme }) => theme.spacing.sm} 0;
-    font-size: ${({ theme }) => theme.fonts.sizes.base};
+    font-size: ${({ theme }) => theme.fonts.sizes.md};
     color: ${({ theme }) => theme.colors.text.primary};
     line-height: ${({ theme }) => theme.fonts.lineHeights.normal};
     

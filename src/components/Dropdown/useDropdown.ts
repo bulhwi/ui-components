@@ -21,7 +21,7 @@ function defaultFilter<T>(option: DropdownOption<T>, query: string): boolean {
   const searchStr = query.toLowerCase();
   return (
     option.label.toLowerCase().includes(searchStr) ||
-    (option.description && option.description.toLowerCase().includes(searchStr))
+    (option.description ? option.description.toLowerCase().includes(searchStr) : false)
   );
 }
 

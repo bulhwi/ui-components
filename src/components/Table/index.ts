@@ -7,6 +7,6 @@ export type {
   TableRowSelection,
   TablePagination as TablePaginationConfig,
   TableSorter,
-  PaginationProps,
+  PaginationProps as TablePaginationProps,
   TableState,
 } from './types';

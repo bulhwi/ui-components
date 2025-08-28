@@ -17,7 +17,7 @@ const sizeStyles = {
     }
   `,
   default: css`
-    font-size: ${({ theme }) => theme.fonts.sizes.base};
+    font-size: ${({ theme }) => theme.fonts.sizes.md};
     
     th, td {
       padding: ${({ theme }) => `${theme.spacing.md} ${theme.spacing.md}`};
@@ -274,7 +274,7 @@ export const StyledEmptyState = styled.div`
   }
   
   .empty-text {
-    font-size: ${({ theme }) => theme.fonts.sizes.base};
+    font-size: ${({ theme }) => theme.fonts.sizes.md};
   }
 `;
 

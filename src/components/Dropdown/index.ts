@@ -48,8 +48,12 @@ export {
   Checkbox,
   EmptyState,
   LoadingState,
+} from './styles';
+
+// Icon exports
+export {
   ChevronDownIcon,
   CheckIcon,
   XIcon,
   SearchIcon,
-} from './styles';
+} from './icons';
