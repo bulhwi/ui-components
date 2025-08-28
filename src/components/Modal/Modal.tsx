@@ -48,6 +48,7 @@ export const Modal: React.FC<ModalProps> = ({
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const openTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Portal 컨테이너 생성 및 정리
   useEffect(() => {
@@ -69,18 +70,36 @@ export const Modal: React.FC<ModalProps> = ({
 
   // 모달 열기/닫기 상태 관리
   useEffect(() => {
-    if (isOpen && !isVisible) {
+    if (isOpen && !isVisible && !isClosing) {
       // 현재 포커스된 요소 저장
       previousActiveElement.current = document.activeElement as HTMLElement;
       setIsVisible(true);
-      setIsClosing(false);
       onOpen?.();
-    } else if (!isOpen && isVisible) {
-      handleClose();
+      
+      // 애니메이션 완료 후 콜백 호출
+      openTimeoutRef.current = setTimeout(() => {
+        onAfterOpen?.();
+      }, 250);
+    } else if (!isOpen && isVisible && !isClosing) {
+      setIsClosing(true);
+      
+      closeTimeoutRef.current = setTimeout(() => {
+        setIsVisible(false);
+        setIsClosing(false);
+        
+        // 이전 포커스 복원
+        if (previousActiveElement.current) {
+          previousActiveElement.current.focus();
+          previousActiveElement.current = null;
+        }
+        
+        onAfterClose?.();
+        onClose();
+      }, 250);
     }
-  }, [isOpen, isVisible]);
+  }, [isOpen, isVisible, isClosing, onOpen, onAfterOpen, onClose, onAfterClose]);
 
-  // 모달이 열릴 때의 처리
+  // 모달이 열릴 때의 포커스 처리
   useEffect(() => {
     if (isVisible && !isClosing) {
       // 모달에 포커스 설정
@@ -99,14 +118,10 @@ export const Modal: React.FC<ModalProps> = ({
       };
 
       // 애니메이션 완료 후 포커스 설정
-      const timer = setTimeout(() => {
-        focusModal();
-        onAfterOpen?.();
-      }, 300);
-
+      const timer = setTimeout(focusModal, 250);
       return () => clearTimeout(timer);
     }
-  }, [isVisible, isClosing, onAfterOpen]);
+  }, [isVisible, isClosing]);
 
   // 스크롤 방지
   useEffect(() => {
@@ -167,31 +182,19 @@ export const Modal: React.FC<ModalProps> = ({
   }, [isVisible, isClosing]);
 
   const handleClose = useCallback(() => {
-    if (isClosing) return;
-
-    setIsClosing(true);
-    
-    // 애니메이션 완료 후 모달 닫기
-    closeTimeoutRef.current = setTimeout(() => {
-      setIsVisible(false);
-      setIsClosing(false);
-      
-      // 이전 포커스 복원
-      if (previousActiveElement.current) {
-        previousActiveElement.current.focus();
-        previousActiveElement.current = null;
-      }
-      
-      onAfterClose?.();
-      onClose();
-    }, 300);
-  }, [isClosing, onClose, onAfterClose]);
+    if (isClosing || !isVisible) return;
+    // 외부에서 onClose 호출하여 상태 변경
+    onClose();
+  }, [isClosing, isVisible, onClose]);
 
   // 컴포넌트 언마운트 시 타이머 정리
   useEffect(() => {
     return () => {
       if (closeTimeoutRef.current) {
         clearTimeout(closeTimeoutRef.current);
+      }
+      if (openTimeoutRef.current) {
+        clearTimeout(openTimeoutRef.current);
       }
     };
   }, []);

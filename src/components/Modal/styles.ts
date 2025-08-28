@@ -101,24 +101,24 @@ const sizeStyles = {
   `,
 };
 
-// 애니메이션별 스타일 함수
+// 애니메이션별 스타일 함수 (타이밍 통일: 250ms)
 const getAnimationStyles = (animation: ModalAnimation, isClosing?: boolean) => {
   switch (animation) {
     case 'fade':
       return css`
-        animation: ${isClosing ? fadeOut : fadeIn} 0.2s ease-out;
+        animation: ${isClosing ? fadeOut : fadeIn} 0.25s ease-out;
       `;
     case 'slideUp':
       return css`
-        animation: ${isClosing ? slideUpOut : slideUpIn} 0.3s ease-out;
+        animation: ${isClosing ? slideUpOut : slideUpIn} 0.25s ease-out;
       `;
     case 'slideDown':
       return css`
-        animation: ${isClosing ? slideDownOut : slideDownIn} 0.3s ease-out;
+        animation: ${isClosing ? slideDownOut : slideDownIn} 0.25s ease-out;
       `;
     case 'scale':
       return css`
-        animation: ${isClosing ? scaleOut : scaleIn} 0.2s ease-out;
+        animation: ${isClosing ? scaleOut : scaleIn} 0.25s ease-out;
       `;
     default:
       return css``;
@@ -153,7 +153,7 @@ export const StyledOverlay = styled.div.withConfig({
   z-index: ${({ zIndex }) => zIndex || 1000};
   padding: ${({ theme }) => theme.spacing.md};
   
-  animation: ${({ isClosing }) => (isClosing ? fadeOut : fadeIn)} 0.2s ease-out;
+  animation: ${({ isClosing }) => (isClosing ? fadeOut : fadeIn)} 0.25s ease-out;
   
   /* 스크롤 방지를 위한 오버플로우 처리 */
   overflow-y: auto;
