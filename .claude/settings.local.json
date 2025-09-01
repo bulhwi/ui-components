@@ -31,7 +31,9 @@
       "Bash(npm run clean:*)",
       "Bash(npm run link-local:*)",
       "Bash(find:*)",
-      "mcp__vooster-ai__add_task"
+      "mcp__vooster-ai__add_task",
+      "mcp__vooster-ai__list_task",
+      "Bash(npx storybook@latest dev:*)"
     ],
     "deny": []
   }

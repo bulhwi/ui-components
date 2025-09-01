@@ -159,18 +159,18 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(({
       return cloneElement(children, {
         ...tooltip.targetProps,
         // Merge existing props
-        ref: (node: HTMLElement) => {
+        ref: (node: HTMLElement | null) => {
           // Handle both ref types
-          if (tooltip.targetRef) {
-            tooltip.targetRef.current = node;
+          if (tooltip.targetRef && 'current' in tooltip.targetRef) {
+            (tooltip.targetRef as React.MutableRefObject<HTMLElement | null>).current = node;
           }
           
           // Handle original ref
           const originalRef = (children as any).ref;
           if (typeof originalRef === 'function') {
             originalRef(node);
-          } else if (originalRef) {
-            originalRef.current = node;
+          } else if (originalRef && 'current' in originalRef) {
+            (originalRef as React.MutableRefObject<HTMLElement | null>).current = node;
           }
         },
         // Merge event handlers
@@ -219,14 +219,7 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(({
     return createPortal(
       <TooltipPortal style={{ zIndex }}>
         <TooltipContainer
-          ref={(node) => {
-            tooltip.tooltipRef.current = node;
-            if (typeof ref === 'function') {
-              ref(node);
-            } else if (ref) {
-              ref.current = node;
-            }
-          }}
+          ref={tooltip.tooltipRef as React.RefObject<HTMLDivElement>}
           className={className}
           $position={actualPosition}
           $theme={theme}
@@ -238,8 +231,6 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(({
             top: tooltipPosition.y,
             ...tooltipProps?.style,
           }}
-          {...tooltip.tooltipProps}
-          {...tooltipProps}
           {...rest}
         >
           <TooltipContent>

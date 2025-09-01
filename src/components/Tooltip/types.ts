@@ -120,7 +120,6 @@ export interface UseTooltipReturn {
   hide: () => void;
   toggle: () => void;
   targetProps: {
-    ref: React.RefObject<HTMLElement>;
     onMouseEnter?: () => void;
     onMouseLeave?: () => void;
     onClick?: () => void;
@@ -130,7 +129,6 @@ export interface UseTooltipReturn {
     'aria-describedby'?: string;
   };
   tooltipProps: {
-    ref: React.RefObject<HTMLDivElement>;
     id: string;
     role: string;
   };

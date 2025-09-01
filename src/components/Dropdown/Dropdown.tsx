@@ -535,7 +535,7 @@ export const Dropdown = <T,>({
                 if (position === 'auto') {
                   if (spaceBelow < maxHeight && spaceAbove > spaceBelow) {
                     return {
-                      position: 'fixed',
+                      position: 'fixed' as const,
                       top: triggerRect.top - maxHeight - 4,
                       left: triggerRect.left,
                     };
@@ -543,7 +543,7 @@ export const Dropdown = <T,>({
                 }
                 
                 return {
-                  position: 'fixed',
+                  position: 'fixed' as const,
                   top: triggerRect.bottom + 4,
                   left: triggerRect.left,
                 };

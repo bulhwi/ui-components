@@ -14,8 +14,8 @@ export function useTooltip(options: UseTooltipOptions): UseTooltipReturn {
   } = options;
 
   const [isVisible, setIsVisible] = useState(visible ?? false);
-  const targetRef = useRef<HTMLElement>(null);
-  const tooltipRef = useRef<HTMLDivElement>(null);
+  const targetRef = useRef<HTMLDivElement | null>(null);
+  const tooltipRef = useRef<HTMLDivElement | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout>();
   const tooltipId = useId();
 
@@ -186,7 +186,6 @@ export function useTooltip(options: UseTooltipOptions): UseTooltipReturn {
       onKeyDown: handleKeyDown,
     },
     tooltipProps: {
-      ref: tooltipRef,
       id: tooltipId,
       role: 'tooltip',
     },
