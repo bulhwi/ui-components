@@ -50,3 +50,7 @@ storybook-static/
 # Temporary folders
 tmp/
 temp/
+
+# Vooster.ai (deprecated)
+.vooster/
+vooster-docs/
