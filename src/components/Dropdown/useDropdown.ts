@@ -125,13 +125,18 @@ export function useDropdown<T = any>({
   const menuRef = useRef<HTMLElement>(null);
   const optionRefs = useRef<(HTMLElement | null)[]>([]);
   
+  // 내부 상태 관리 (비제어 모드)
+  const [internalValue, setInternalValue] = useState<T | null>(value ?? null);
+  const [internalValues, setInternalValues] = useState<T[]>(values ?? []);
+
   // 현재 선택된 값들
   const selectedValues = useMemo(() => {
     if (multiple) {
-      return values || [];
+      return values ?? internalValues;
     }
-    return value !== undefined && value !== null ? [value] : [];
-  }, [multiple, values, value]);
+    const currentValue = value ?? internalValue;
+    return currentValue !== undefined && currentValue !== null ? [currentValue] : [];
+  }, [multiple, values, value, internalValues, internalValue]);
   
   // 필터링된 옵션들
   const filteredOptions = useMemo(() => {
@@ -177,44 +182,72 @@ export function useDropdown<T = any>({
       setIsSearching(false);
     }
   }, [isOpen, onOpenChange]);
-  
+
   // 옵션 선택
   const selectOption = useCallback((option: DropdownOption<T>) => {
     if (option.disabled) return;
-    
+
     if (multiple) {
-      const newValues = selectedValues.includes(option.value)
-        ? selectedValues.filter(v => v !== option.value)
-        : [...selectedValues, option.value];
-      
+      const currentValues = values ?? internalValues;
+      const newValues = currentValues.includes(option.value)
+        ? currentValues.filter(v => v !== option.value)
+        : [...currentValues, option.value];
+
+      // 비제어 모드일 때 내부 상태 업데이트
+      if (values === undefined) {
+        setInternalValues(newValues);
+      }
+
       onMultiChange?.(newValues);
-      
+
       if (!closeOnSelect) return;
     } else {
-      onChange?.(option.value);
+      const newValue = option.value;
+
+      // 비제어 모드일 때 내부 상태 업데이트
+      if (value === undefined) {
+        setInternalValue(newValue);
+      }
+
+      onChange?.(newValue);
     }
-    
+
     if (closeOnSelect) {
       close();
     }
-  }, [multiple, selectedValues, onMultiChange, onChange, closeOnSelect, close]);
+  }, [multiple, values, internalValues, value, internalValue, onMultiChange, onChange, closeOnSelect, close]);
   
   // 옵션 제거 (다중 선택)
   const removeOption = useCallback((valueToRemove: T) => {
     if (!multiple) return;
-    
-    const newValues = selectedValues.filter(v => v !== valueToRemove);
+
+    const currentValues = values ?? internalValues;
+    const newValues = currentValues.filter(v => v !== valueToRemove);
+
+    // 비제어 모드일 때 내부 상태 업데이트
+    if (values === undefined) {
+      setInternalValues(newValues);
+    }
+
     onMultiChange?.(newValues);
-  }, [multiple, selectedValues, onMultiChange]);
-  
+  }, [multiple, values, internalValues, onMultiChange]);
+
   // 모든 옵션 제거
   const clearAll = useCallback(() => {
     if (multiple) {
+      // 비제어 모드일 때 내부 상태 업데이트
+      if (values === undefined) {
+        setInternalValues([]);
+      }
       onMultiChange?.([]);
     } else {
+      // 비제어 모드일 때 내부 상태 업데이트
+      if (value === undefined) {
+        setInternalValue(null);
+      }
       onChange?.(null);
     }
-  }, [multiple, onMultiChange, onChange]);
+  }, [multiple, values, value, onMultiChange, onChange]);
   
   // 검색어 설정
   const handleSetSearchQuery = useCallback((query: string) => {
