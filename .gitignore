@@ -54,3 +54,6 @@ temp/
 # Vooster.ai (deprecated)
 .vooster/
 vooster-docs/
+
+# Claude Code
+.claude/
