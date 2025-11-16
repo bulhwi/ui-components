@@ -12,19 +12,19 @@ const renderWithTheme = (component: React.ReactElement) => {
   );
 };
 
-describe('Typography', () => {
-  it('renders children correctly', () => {
+describe('Typography 컴포넌트', () => {
+  it('자식 요소를 올바르게 렌더링한다', () => {
     renderWithTheme(<Typography>Test text</Typography>);
     expect(screen.getByText('Test text')).toBeInTheDocument();
   });
 
-  it('applies default variant (body1)', () => {
+  it('기본 variant(body1)를 적용한다', () => {
     renderWithTheme(<Typography>Default text</Typography>);
     const element = screen.getByText('Default text');
     expect(element.tagName).toBe('P'); // Default element for body1
   });
 
-  it('renders different variants with correct semantic elements', () => {
+  it('올바른 시맨틱 요소로 다양한 variant를 렌더링한다', () => {
     const testCases = [
       { variant: 'h1', expectedTag: 'H1' },
       { variant: 'h2', expectedTag: 'H2' },

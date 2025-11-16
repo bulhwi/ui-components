@@ -14,18 +14,18 @@ const renderWithTheme = (component: React.ReactElement) => {
 };
 
 describe('Badge', () => {
-  it('renders children correctly', () => {
+  it('자식 요소를 올바르게 렌더링한다', () => {
     renderWithTheme(<Badge>Test Badge</Badge>);
     expect(screen.getByText('Test Badge')).toBeInTheDocument();
   });
 
-  it('applies default props correctly', () => {
+  it('기본 props를 올바르게 적용한다', () => {
     renderWithTheme(<Badge>Default</Badge>);
     const badge = screen.getByText('Default');
     expect(badge).toBeInTheDocument();
   });
 
-  it('renders different variants', () => {
+  it('다양한 variant를 렌더링한다', () => {
     const variants = ['filled', 'outlined', 'soft', 'dot'] as const;
     
     variants.forEach((variant) => {
@@ -42,7 +42,7 @@ describe('Badge', () => {
     });
   });
 
-  it('applies different colors', () => {
+  it('다양한 색상을 적용한다', () => {
     const colors = ['primary', 'secondary', 'success', 'warning', 'error', 'info'] as const;
     
     colors.forEach((color) => {
@@ -59,7 +59,7 @@ describe('Badge', () => {
     });
   });
 
-  it('applies different sizes', () => {
+  it('다양한 크기를 적용한다', () => {
     const sizes = ['small', 'medium', 'large'] as const;
     
     sizes.forEach((size) => {
@@ -76,41 +76,41 @@ describe('Badge', () => {
     });
   });
 
-  it('handles count prop correctly', () => {
+  it('count prop을 올바르게 처리한다', () => {
     renderWithTheme(<Badge count={5} />);
     expect(screen.getByText('5')).toBeInTheDocument();
   });
 
-  it('handles maxCount correctly', () => {
+  it('maxCount를 올바르게 처리한다', () => {
     renderWithTheme(<Badge count={150} maxCount={99} />);
     expect(screen.getByText('99+')).toBeInTheDocument();
   });
 
-  it('hides zero count by default', () => {
+  it('기본적으로 0 카운트를 숨긴다', () => {
     renderWithTheme(<Badge count={0} data-testid="zero-badge" />);
     const badge = screen.getByTestId('zero-badge');
     expect(badge).toHaveStyle('opacity: 0');
   });
 
-  it('shows zero count when showZero is true', () => {
+  it('showZero가 true일 때 0 카운트를 표시한다', () => {
     renderWithTheme(<Badge count={0} showZero data-testid="zero-badge" />);
     expect(screen.getByText('0')).toBeInTheDocument();
   });
 
-  it('renders dot badge correctly', () => {
+  it('dot 배지를 올바르게 렌더링한다', () => {
     renderWithTheme(<Badge dot data-testid="dot-badge" />);
     const badge = screen.getByTestId('dot-badge');
     expect(badge).toBeInTheDocument();
     expect(badge).toBeEmptyDOMElement();
   });
 
-  it('handles visibility prop', () => {
+  it('visibility prop을 처리한다', () => {
     renderWithTheme(<Badge visible={false} data-testid="invisible-badge">Hidden</Badge>);
     const badge = screen.getByTestId('invisible-badge');
     expect(badge).toHaveStyle('opacity: 0');
   });
 
-  it('renders closable badge with close button', () => {
+  it('닫기 버튼이 있는 closable 배지를 렌더링한다', () => {
     const handleClose = jest.fn();
     renderWithTheme(
       <Badge closable onClose={handleClose}>Closable</Badge>
@@ -120,7 +120,7 @@ describe('Badge', () => {
     expect(screen.getByRole('button', { name: 'Remove badge' })).toBeInTheDocument();
   });
 
-  it('calls onClose when close button is clicked', () => {
+  it('닫기 버튼 클릭 시 onClose를 호출한다', () => {
     const handleClose = jest.fn();
     renderWithTheme(
       <Badge closable onClose={handleClose}>Closable</Badge>
@@ -132,7 +132,7 @@ describe('Badge', () => {
     expect(handleClose).toHaveBeenCalledTimes(1);
   });
 
-  it('prevents event propagation on close button click', () => {
+  it('닫기 버튼 클릭 시 이벤트 전파를 방지한다', () => {
     const handleClick = jest.fn();
     const handleClose = jest.fn();
     
@@ -147,7 +147,7 @@ describe('Badge', () => {
     expect(handleClick).not.toHaveBeenCalled();
   });
 
-  it('handles onClick prop', () => {
+  it('onClick prop을 처리한다', () => {
     const handleClick = jest.fn();
     renderWithTheme(
       <Badge onClick={handleClick}>Clickable</Badge>
@@ -159,7 +159,7 @@ describe('Badge', () => {
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
 
-  it('applies correct role based on onClick prop', () => {
+  it('onClick prop에 따라 올바른 role을 적용한다', () => {
     const { rerender } = renderWithTheme(<Badge>Status Badge</Badge>);
     expect(screen.getByRole('status')).toBeInTheDocument();
     
@@ -171,7 +171,7 @@ describe('Badge', () => {
     expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
-  it('renders with icon', () => {
+  it('아이콘과 함께 렌더링한다', () => {
     renderWithTheme(
       <Badge icon={<span data-testid="icon">🎉</span>}>With Icon</Badge>
     );
@@ -180,7 +180,7 @@ describe('Badge', () => {
     expect(screen.getByText('With Icon')).toBeInTheDocument();
   });
 
-  it('applies custom className', () => {
+  it('커스텀 className을 적용한다', () => {
     renderWithTheme(
       <Badge className="custom-badge" data-testid="custom-badge">Custom</Badge>
     );
@@ -189,22 +189,22 @@ describe('Badge', () => {
     expect(badge).toHaveClass('custom-badge');
   });
 
-  it('forwards ref correctly', () => {
+  it('ref를 올바르게 전달한다', () => {
     const ref = React.createRef<HTMLSpanElement>();
-    
+
     renderWithTheme(
       <Badge ref={ref}>Ref Badge</Badge>
     );
-    
+
     expect(ref.current).toBeInstanceOf(HTMLElement);
     expect(ref.current?.textContent).toBe('Ref Badge');
   });
 
-  it('has correct display name', () => {
+  it('올바른 display name을 가진다', () => {
     expect(Badge.displayName).toBe('Badge');
   });
 
-  it('handles keyboard events for clickable badges', () => {
+  it('클릭 가능한 배지의 키보드 이벤트를 처리한다', () => {
     const handleClick = jest.fn();
     renderWithTheme(
       <Badge onClick={handleClick}>Clickable</Badge>
@@ -214,14 +214,14 @@ describe('Badge', () => {
     expect(badge).toHaveAttribute('tabIndex', '0');
   });
 
-  it('does not have tabIndex for non-clickable badges', () => {
+  it('클릭 불가능한 배지는 tabIndex를 가지지 않는다', () => {
     renderWithTheme(<Badge>Non-clickable</Badge>);
     
     const badge = screen.getByRole('status');
     expect(badge).not.toHaveAttribute('tabIndex');
   });
 
-  it('applies position styles', () => {
+  it('위치 스타일을 적용한다', () => {
     const positions = ['top-right', 'top-left', 'bottom-right', 'bottom-left'] as const;
     
     positions.forEach((position) => {
@@ -238,7 +238,7 @@ describe('Badge', () => {
     });
   });
 
-  it('handles count edge cases', () => {
+  it('count 엣지 케이스를 처리한다', () => {
     // Negative count
     renderWithTheme(<Badge count={-5} data-testid="negative" />);
     expect(screen.getByText('-5')).toBeInTheDocument();
@@ -248,26 +248,26 @@ describe('Badge', () => {
     expect(screen.getByText('999+')).toBeInTheDocument();
   });
 
-  it('handles empty children gracefully', () => {
+  it('빈 자식 요소를 우아하게 처리한다', () => {
     renderWithTheme(<Badge data-testid="empty-badge" />);
     const badge = screen.getByTestId('empty-badge');
     expect(badge).toBeInTheDocument();
   });
 
-  describe('Accessibility', () => {
-    it('has aria-hidden when not visible', () => {
+  describe('접근성', () => {
+    it('보이지 않을 때 aria-hidden을 가진다', () => {
       renderWithTheme(<Badge visible={false} data-testid="hidden">Hidden</Badge>);
       const badge = screen.getByTestId('hidden');
       expect(badge).toHaveAttribute('aria-hidden', 'true');
     });
 
-    it('does not have aria-hidden when visible', () => {
+    it('보일 때 aria-hidden을 가지지 않는다', () => {
       renderWithTheme(<Badge visible={true} data-testid="visible">Visible</Badge>);
       const badge = screen.getByTestId('visible');
       expect(badge).toHaveAttribute('aria-hidden', 'false');
     });
 
-    it('close button has proper accessibility label', () => {
+    it('닫기 버튼이 적절한 접근성 레이블을 가진다', () => {
       renderWithTheme(<Badge closable onClose={() => {}}>Closable</Badge>);
       const closeButton = screen.getByRole('button', { name: 'Remove badge' });
       expect(closeButton).toHaveAttribute('aria-label', 'Remove badge');
@@ -276,7 +276,7 @@ describe('Badge', () => {
 });
 
 describe('BadgeWrapper', () => {
-  it('renders children and badge correctly', () => {
+  it('자식 요소와 배지를 올바르게 렌더링한다', () => {
     renderWithTheme(
       <BadgeWrapper badge={{ count: 5 }}>
         <button>Test Button</button>
@@ -287,7 +287,7 @@ describe('BadgeWrapper', () => {
     expect(screen.getByText('5')).toBeInTheDocument();
   });
 
-  it('renders without badge when badge prop is not provided', () => {
+  it('badge prop이 제공되지 않으면 배지 없이 렌더링한다', () => {
     renderWithTheme(
       <BadgeWrapper>
         <button>Test Button</button>
@@ -298,7 +298,7 @@ describe('BadgeWrapper', () => {
     expect(screen.queryByText('5')).not.toBeInTheDocument();
   });
 
-  it('applies inline prop correctly', () => {
+  it('inline prop을 올바르게 적용한다', () => {
     renderWithTheme(
       <BadgeWrapper inline data-testid="inline-wrapper">
         <span>Content</span>
@@ -309,23 +309,23 @@ describe('BadgeWrapper', () => {
     expect(wrapper).toBeInTheDocument();
   });
 
-  it('forwards ref correctly', () => {
+  it('ref를 올바르게 전달한다', () => {
     const ref = React.createRef<HTMLDivElement>();
-    
+
     renderWithTheme(
       <BadgeWrapper ref={ref}>
         <span>Content</span>
       </BadgeWrapper>
     );
-    
+
     expect(ref.current).toBeInstanceOf(HTMLElement);
   });
 
-  it('has correct display name', () => {
+  it('올바른 display name을 가진다', () => {
     expect(BadgeWrapper.displayName).toBe('BadgeWrapper');
   });
 
-  it('passes badge props correctly', () => {
+  it('badge props를 올바르게 전달한다', () => {
     renderWithTheme(
       <BadgeWrapper 
         badge={{ 

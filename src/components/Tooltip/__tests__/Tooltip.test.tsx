@@ -20,7 +20,7 @@ jest.mock('react-dom', () => ({
   createPortal: (children: React.ReactNode, container: Element) => mockCreatePortal(children, container),
 }));
 
-describe('Tooltip', () => {
+describe('Tooltip 컴포넌트', () => {
   beforeEach(() => {
     mockCreatePortal.mockClear();
     // Mock DOM methods
@@ -37,7 +37,7 @@ describe('Tooltip', () => {
     }));
   });
 
-  it('renders children correctly', () => {
+  it('자식 요소를 올바르게 렌더링한다', () => {
     renderWithTheme(
       <Tooltip content="Test tooltip">
         <button>Test Button</button>
@@ -47,7 +47,7 @@ describe('Tooltip', () => {
     expect(screen.getByRole('button', { name: 'Test Button' })).toBeInTheDocument();
   });
 
-  it('does not show tooltip initially', () => {
+  it('초기에는 툴팁을 표시하지 않는다', () => {
     renderWithTheme(
       <Tooltip content="Test tooltip">
         <button>Test Button</button>
@@ -57,7 +57,7 @@ describe('Tooltip', () => {
     expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
   });
 
-  it('shows tooltip on hover by default', async () => {
+  it('기본적으로 호버 시 툴팁을 표시한다', async () => {
     const user = userEvent.setup();
     
     renderWithTheme(
@@ -75,7 +75,7 @@ describe('Tooltip', () => {
     });
   });
 
-  it('hides tooltip when mouse leaves', async () => {
+  it('마우스가 떠나면 툴팁을 숨긴다', async () => {
     const user = userEvent.setup();
     
     renderWithTheme(
@@ -98,7 +98,7 @@ describe('Tooltip', () => {
     });
   });
 
-  it('shows tooltip on click when trigger is click', async () => {
+  it('trigger가 click일 때 클릭 시 툴팁을 표시한다', async () => {
     const user = userEvent.setup();
     
     renderWithTheme(
@@ -115,7 +115,7 @@ describe('Tooltip', () => {
     });
   });
 
-  it('toggles tooltip on multiple clicks', async () => {
+  it('여러 번 클릭 시 툴팁을 토글한다', async () => {
     const user = userEvent.setup();
     
     renderWithTheme(
@@ -139,7 +139,7 @@ describe('Tooltip', () => {
     });
   });
 
-  it('shows tooltip on focus when trigger is focus', async () => {
+  it('trigger가 focus일 때 포커스 시 툴팁을 표시한다', async () => {
     const user = userEvent.setup();
     
     renderWithTheme(
@@ -156,7 +156,7 @@ describe('Tooltip', () => {
     });
   });
 
-  it('respects delayIn prop', async () => {
+  it('delayIn prop을 존중한다', async () => {
     const user = userEvent.setup();
     jest.useFakeTimers();
     
@@ -184,7 +184,7 @@ describe('Tooltip', () => {
     jest.useRealTimers();
   });
 
-  it('respects delayOut prop', async () => {
+  it('delayOut prop을 존중한다', async () => {
     const user = userEvent.setup();
     jest.useFakeTimers();
     
@@ -507,7 +507,7 @@ describe('Tooltip', () => {
     });
   });
 
-  it('forwards ref correctly', async () => {
+  it('ref를 올바르게 전달한다', async () => {
     const ref = React.createRef<HTMLDivElement>();
     const user = userEvent.setup();
     
@@ -528,7 +528,7 @@ describe('Tooltip', () => {
     // This test verifies the ref prop is accepted
   }, 15000);
 
-  it('has correct display name', () => {
+  it('올바른 display name을 가진다', () => {
     expect(Tooltip.displayName).toBe('Tooltip');
   });
 });

@@ -13,7 +13,7 @@ const renderWithTheme = (component: React.ReactElement) => {
   );
 };
 
-describe('Pagination', () => {
+describe('Pagination 컴포넌트', () => {
   const defaultProps = {
     current: 1,
     total: 100,
@@ -25,7 +25,7 @@ describe('Pagination', () => {
     jest.clearAllMocks();
   });
 
-  it('renders pagination with basic props', () => {
+  it('기본 props로 페이지네이션을 렌더링한다', () => {
     renderWithTheme(<Pagination {...defaultProps} />);
     
     expect(screen.getByTestId('pagination-prev')).toBeInTheDocument();
@@ -34,7 +34,7 @@ describe('Pagination', () => {
     expect(screen.getByTestId('pagination-page-2')).toBeInTheDocument();
   });
 
-  it('handles page change correctly', async () => {
+  it('페이지 변경을 올바르게 처리한다', async () => {
     const user = userEvent.setup();
     const onChange = jest.fn();
     
@@ -48,28 +48,28 @@ describe('Pagination', () => {
     expect(onChange).toHaveBeenCalledWith(2, 10);
   });
 
-  it('disables previous button on first page', () => {
+  it('첫 페이지에서 이전 버튼을 비활성화한다', () => {
     renderWithTheme(<Pagination {...defaultProps} current={1} />);
     
     const prevButton = screen.getByTestId('pagination-prev');
     expect(prevButton).toBeDisabled();
   });
 
-  it('disables next button on last page', () => {
+  it('마지막 페이지에서 다음 버튼을 비활성화한다', () => {
     renderWithTheme(<Pagination {...defaultProps} current={10} />);
     
     const nextButton = screen.getByTestId('pagination-next');
     expect(nextButton).toBeDisabled();
   });
 
-  it('highlights current page', () => {
+  it('현재 페이지를 강조 표시한다', () => {
     renderWithTheme(<Pagination {...defaultProps} current={3} />);
     
     const currentPageButton = screen.getByTestId('pagination-page-3');
     expect(currentPageButton).toHaveAttribute('aria-current', 'page');
   });
 
-  it('shows page size selector when enabled', () => {
+  it('활성화되면 페이지 크기 선택기를 표시한다', () => {
     renderWithTheme(
       <Pagination
         {...defaultProps}
@@ -82,7 +82,7 @@ describe('Pagination', () => {
     expect(screen.getByDisplayValue('10')).toBeInTheDocument();
   });
 
-  it('handles page size change', async () => {
+  it('페이지 크기 변경을 처리한다', async () => {
     const user = userEvent.setup();
     const onChange = jest.fn();
     
@@ -101,7 +101,7 @@ describe('Pagination', () => {
     expect(onChange).toHaveBeenCalledWith(1, 20);
   });
 
-  it('shows total items when enabled', () => {
+  it('활성화되면 전체 아이템을 표시한다', () => {
     renderWithTheme(
       <Pagination {...defaultProps} showTotal />
     );
@@ -109,7 +109,7 @@ describe('Pagination', () => {
     expect(screen.getByText('Showing 1-10 of 100 items')).toBeInTheDocument();
   });
 
-  it('shows custom total display', () => {
+  it('커스텀 전체 표시를 보여준다', () => {
     const customTotal = (total: number, range: [number, number]) =>
       `Items ${range[0]} to ${range[1]} of ${total}`;
       
@@ -120,7 +120,7 @@ describe('Pagination', () => {
     expect(screen.getByText('Items 1 to 10 of 100')).toBeInTheDocument();
   });
 
-  it('shows quick jumper when enabled', () => {
+  it('활성화되면 빠른 이동을 표시한다', () => {
     renderWithTheme(
       <Pagination {...defaultProps} showQuickJumper />
     );
@@ -128,7 +128,7 @@ describe('Pagination', () => {
     expect(screen.getByLabelText('Jump to page')).toBeInTheDocument();
   });
 
-  it('handles quick jump to page', async () => {
+  it('페이지로 빠르게 이동을 처리한다', async () => {
     const user = userEvent.setup();
     const onChange = jest.fn();
     
@@ -147,7 +147,7 @@ describe('Pagination', () => {
     expect(onChange).toHaveBeenCalledWith(5, 10);
   });
 
-  it('shows first and last buttons when enabled', () => {
+  it('활성화되면 처음과 마지막 버튼을 표시한다', () => {
     renderWithTheme(
       <Pagination {...defaultProps} showFirstLast />
     );
@@ -156,7 +156,7 @@ describe('Pagination', () => {
     expect(screen.getByTestId('pagination-last')).toBeInTheDocument();
   });
 
-  it('handles first and last button clicks', async () => {
+  it('처음과 마지막 버튼 클릭을 처리한다', async () => {
     const user = userEvent.setup();
     const onChange = jest.fn();
     
@@ -178,7 +178,7 @@ describe('Pagination', () => {
     expect(onChange).toHaveBeenCalledWith(10, 10);
   });
 
-  it('renders simple variant correctly', () => {
+  it('simple variant를 올바르게 렌더링한다', () => {
     renderWithTheme(
       <Pagination {...defaultProps} variant="simple" />
     );
@@ -187,7 +187,7 @@ describe('Pagination', () => {
     expect(screen.queryByTestId('pagination-page-1')).not.toBeInTheDocument();
   });
 
-  it('renders simple variant with custom total', () => {
+  it('커스텀 전체와 함께 simple variant를 렌더링한다', () => {
     const customTotal = (total: number, range: [number, number]) =>
       `${range[0]}-${range[1]} of ${total}`;
       
@@ -202,7 +202,7 @@ describe('Pagination', () => {
     expect(screen.getByText('1-10 of 100')).toBeInTheDocument();
   });
 
-  it('handles disabled state', () => {
+  it('비활성화 상태를 처리한다', () => {
     renderWithTheme(<Pagination {...defaultProps} disabled />);
     
     const prevButton = screen.getByTestId('pagination-prev');
@@ -212,7 +212,7 @@ describe('Pagination', () => {
     expect(nextButton).toBeDisabled();
   });
 
-  it('hides on single page when enabled', () => {
+  it('활성화되면 단일 페이지에서 숨긴다', () => {
     const { container } = renderWithTheme(
       <Pagination
         {...defaultProps}
@@ -225,7 +225,7 @@ describe('Pagination', () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it('shows on single page when hideOnSinglePage is false', () => {
+  it('hideOnSinglePage가 false일 때 단일 페이지에 표시한다', () => {
     renderWithTheme(
       <Pagination
         {...defaultProps}
@@ -238,7 +238,7 @@ describe('Pagination', () => {
     expect(screen.getByTestId('pagination-prev')).toBeInTheDocument();
   });
 
-  it('renders with custom navigation text', () => {
+  it('커스텀 네비게이션 텍스트로 렌더링한다', () => {
     renderWithTheme(
       <Pagination
         {...defaultProps}
@@ -256,7 +256,7 @@ describe('Pagination', () => {
     expect(screen.getByText('Last')).toBeInTheDocument();
   });
 
-  it('shows ellipsis for many pages', () => {
+  it('많은 페이지에 대해 말줄임표를 표시한다', () => {
     renderWithTheme(
       <Pagination
         {...defaultProps}
@@ -271,7 +271,7 @@ describe('Pagination', () => {
     expect(ellipsisButtons.length).toBeGreaterThan(0);
   });
 
-  it('handles keyboard navigation', async () => {
+  it('키보드 네비게이션을 처리한다', async () => {
     const user = userEvent.setup();
     const onChange = jest.fn();
     
@@ -286,7 +286,7 @@ describe('Pagination', () => {
     expect(onChange).toHaveBeenCalledWith(2, 10);
   });
 
-  it('has correct accessibility attributes', () => {
+  it('올바른 접근성 속성을 가진다', () => {
     renderWithTheme(<Pagination {...defaultProps} current={3} />);
     
     const currentPageButton = screen.getByTestId('pagination-page-3');
@@ -299,7 +299,7 @@ describe('Pagination', () => {
     expect(nextButton).toHaveAttribute('aria-label', 'Go to next page');
   });
 
-  it('applies custom className', () => {
+  it('커스텀 className을 적용한다', () => {
     const { container } = renderWithTheme(
       <Pagination {...defaultProps} className="custom-pagination" />
     );
@@ -307,7 +307,7 @@ describe('Pagination', () => {
     expect(container.firstChild?.firstChild).toHaveClass('custom-pagination');
   });
 
-  it('applies custom styles', () => {
+  it('커스텀 스타일을 적용한다', () => {
     const customStyle = { backgroundColor: 'red' };
     const { container } = renderWithTheme(
       <Pagination {...defaultProps} style={customStyle} />
@@ -316,7 +316,7 @@ describe('Pagination', () => {
     expect(container.firstChild?.firstChild).toHaveStyle({ backgroundColor: 'red' });
   });
 
-  it('handles zero total items', () => {
+  it('전체 아이템이 0인 경우를 처리한다', () => {
     renderWithTheme(
       <Pagination {...defaultProps} total={0} showTotal />
     );
@@ -324,7 +324,7 @@ describe('Pagination', () => {
     expect(screen.getByText('Showing 0-0 of 0 items')).toBeInTheDocument();
   });
 
-  it('handles large page sizes', () => {
+  it('큰 페이지 크기를 처리한다', () => {
     renderWithTheme(
       <Pagination
         {...defaultProps}
@@ -338,7 +338,7 @@ describe('Pagination', () => {
     expect(screen.queryByTestId('pagination-next')).toBeDisabled();
   });
 
-  it('validates page jump input', async () => {
+  it('페이지 이동 입력을 검증한다', async () => {
     const user = userEvent.setup();
     const onChange = jest.fn();
     
@@ -367,7 +367,7 @@ describe('Pagination', () => {
     expect(onChange).toHaveBeenCalledWith(5, 10);
   });
 
-  it('displays name correctly', () => {
+  it('이름을 올바르게 표시한다', () => {
     expect(Pagination.displayName).toBe('Pagination');
   });
 });

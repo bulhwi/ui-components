@@ -33,34 +33,34 @@ afterEach(() => {
   jest.useRealTimers();
 });
 
-describe('Carousel Component', () => {
-  describe('Basic Rendering', () => {
-    it('renders carousel with items', () => {
+describe('Carousel 컴포넌트', () => {
+  describe('기본 렌더링', () => {
+    it('아이템과 함께 캐러셀을 렌더링한다', () => {
       renderCarousel();
       expect(screen.getByText('Slide 1')).toBeInTheDocument();
       expect(screen.getByRole('region')).toHaveAttribute('aria-label', 'Carousel');
     });
 
-    it('renders navigation arrows by default', () => {
+    it('기본적으로 네비게이션 화살표를 렌더링한다', () => {
       renderCarousel();
       expect(screen.getByLabelText('Previous slide')).toBeInTheDocument();
       expect(screen.getByLabelText('Next slide')).toBeInTheDocument();
     });
 
-    it('renders dot indicators by default', () => {
+    it('기본적으로 점 인디케이터를 렌더링한다', () => {
       renderCarousel();
       const dots = screen.getAllByLabelText(/Go to slide/);
       expect(dots).toHaveLength(5); // 5 items = 5 dots
     });
 
-    it('renders with custom aria-label', () => {
+    it('커스텀 aria-label로 렌더링한다', () => {
       renderCarousel({ 'aria-label': 'Custom Carousel' });
       expect(screen.getByRole('region')).toHaveAttribute('aria-label', 'Custom Carousel');
     });
   });
 
-  describe('Navigation', () => {
-    it('navigates to next slide when next arrow is clicked', async () => {
+  describe('네비게이션', () => {
+    it('다음 화살표 클릭 시 다음 슬라이드로 이동한다', async () => {
       renderCarousel();
       
       const nextButton = screen.getByLabelText('Next slide');
@@ -71,7 +71,7 @@ describe('Carousel Component', () => {
       });
     });
 
-    it('navigates to previous slide when previous arrow is clicked', async () => {
+    it('이전 화살표 클릭 시 이전 슬라이드로 이동한다', async () => {
       renderCarousel({ initialSlide: 2 });
       
       const prevButton = screen.getByLabelText('Previous slide');
@@ -82,7 +82,7 @@ describe('Carousel Component', () => {
       });
     });
 
-    it('navigates to specific slide when dot is clicked', async () => {
+    it('점 클릭 시 특정 슬라이드로 이동한다', async () => {
       renderCarousel();
       
       const thirdDot = screen.getByLabelText('Go to slide 3');
@@ -93,7 +93,7 @@ describe('Carousel Component', () => {
       });
     });
 
-    it('disables navigation at boundaries when infinite is false', () => {
+    it('infinite가 false일 때 경계에서 네비게이션을 비활성화한다', () => {
       renderCarousel({ infinite: false });
       
       const prevButton = screen.getByLabelText('Previous slide');
@@ -104,8 +104,8 @@ describe('Carousel Component', () => {
     });
   });
 
-  describe('Keyboard Navigation', () => {
-    it('navigates with arrow keys when keyboard is enabled', async () => {
+  describe('키보드 네비게이션', () => {
+    it('키보드가 활성화되면 화살표 키로 이동한다', async () => {
       renderCarousel({ keyboard: true });
       
       const carousel = screen.getByRole('region');
@@ -118,7 +118,7 @@ describe('Carousel Component', () => {
       });
     });
 
-    it('navigates to first slide with Home key', async () => {
+    it('Home 키로 첫 슬라이드로 이동한다', async () => {
       renderCarousel({ keyboard: true, initialSlide: 2 });
       
       const carousel = screen.getByRole('region');
@@ -131,7 +131,7 @@ describe('Carousel Component', () => {
       });
     });
 
-    it('navigates to last slide with End key', async () => {
+    it('End 키로 마지막 슬라이드로 이동한다', async () => {
       renderCarousel({ keyboard: true });
       
       const carousel = screen.getByRole('region');
@@ -144,7 +144,7 @@ describe('Carousel Component', () => {
       });
     });
 
-    it('does not navigate when keyboard is disabled', async () => {
+    it('키보드가 비활성화되면 이동하지 않는다', async () => {
       renderCarousel({ keyboard: false });
       
       const carousel = screen.getByRole('region');
@@ -157,8 +157,8 @@ describe('Carousel Component', () => {
     });
   });
 
-  describe('Autoplay', () => {
-    it('auto-advances slides when autoplay is enabled', async () => {
+  describe('자동 재생', () => {
+    it('자동 재생이 활성화되면 슬라이드가 자동으로 진행된다', async () => {
       renderCarousel({ autoplay: true, autoplaySpeed: 1000 });
       
       expect(screen.getByText('Slide 1')).toBeInTheDocument();
@@ -172,7 +172,7 @@ describe('Carousel Component', () => {
       });
     });
 
-    it('pauses autoplay on hover when pauseOnHover is enabled', async () => {
+    it('pauseOnHover가 활성화되면 hover 시 자동 재생이 일시정지된다', async () => {
       renderCarousel({ autoplay: true, autoplaySpeed: 1000, pauseOnHover: true });
       
       const carousel = screen.getByRole('region');
@@ -188,7 +188,7 @@ describe('Carousel Component', () => {
       expect(screen.getByText('Slide 1')).toBeInTheDocument();
     });
 
-    it('resumes autoplay when mouse leaves', async () => {
+    it('마우스가 떠나면 자동 재생이 재개된다', async () => {
       renderCarousel({ autoplay: true, autoplaySpeed: 1000, pauseOnHover: true });
       
       const carousel = screen.getByRole('region');
@@ -207,8 +207,8 @@ describe('Carousel Component', () => {
     });
   });
 
-  describe('Multiple Slides', () => {
-    it('displays multiple slides when slidesToShow > 1', () => {
+  describe('다중 슬라이드', () => {
+    it('slidesToShow > 1일 때 여러 슬라이드를 표시한다', () => {
       renderCarousel({ slidesToShow: 3 });
       
       expect(screen.getByText('Slide 1')).toBeInTheDocument();
@@ -216,7 +216,7 @@ describe('Carousel Component', () => {
       expect(screen.getByText('Slide 3')).toBeInTheDocument();
     });
 
-    it('scrolls by slidesToScroll amount', async () => {
+    it('slidesToScroll 양만큼 스크롤한다', async () => {
       renderCarousel({ slidesToShow: 2, slidesToScroll: 2 });
       
       const nextButton = screen.getByLabelText('Next slide');
@@ -229,8 +229,8 @@ describe('Carousel Component', () => {
     });
   });
 
-  describe('Infinite Loop', () => {
-    it('enables seamless loop when infinite is true', async () => {
+  describe('무한 루프', () => {
+    it('infinite가 true일 때 끊김없는 루프를 활성화한다', async () => {
       renderCarousel({ infinite: true });
       
       const prevButton = screen.getByLabelText('Previous slide');
@@ -246,8 +246,8 @@ describe('Carousel Component', () => {
     });
   });
 
-  describe('Touch/Swipe Gestures', () => {
-    it('responds to touch swipe gestures', async () => {
+  describe('터치/스와이프 제스처', () => {
+    it('터치 스와이프 제스처에 반응한다', async () => {
       renderCarousel({ swipe: true });
       
       const carousel = screen.getByRole('region');
@@ -262,7 +262,7 @@ describe('Carousel Component', () => {
       });
     });
 
-    it('does not respond to swipe when swipe is disabled', async () => {
+    it('swipe가 비활성화되면 스와이프에 반응하지 않는다', async () => {
       renderCarousel({ swipe: false });
       
       const carousel = screen.getByRole('region');
@@ -277,27 +277,27 @@ describe('Carousel Component', () => {
     });
   });
 
-  describe('Customization', () => {
-    it('hides arrows when arrows is false', () => {
+  describe('커스터마이징', () => {
+    it('arrows가 false일 때 화살표를 숨긴다', () => {
       renderCarousel({ arrows: false });
       
       expect(screen.queryByLabelText('Previous slide')).not.toBeInTheDocument();
       expect(screen.queryByLabelText('Next slide')).not.toBeInTheDocument();
     });
 
-    it('hides dots when dots is false', () => {
+    it('dots가 false일 때 점을 숨긴다', () => {
       renderCarousel({ dots: false });
       
       expect(screen.queryByLabelText(/Go to slide/)).not.toBeInTheDocument();
     });
 
-    it('shows counter when counter is true', () => {
+    it('counter가 true일 때 카운터를 표시한다', () => {
       renderCarousel({ counter: true });
       
       expect(screen.getByText('1 / 5')).toBeInTheDocument();
     });
 
-    it('updates counter when slide changes', async () => {
+    it('슬라이드 변경 시 카운터를 업데이트한다', async () => {
       renderCarousel({ counter: true });
       
       const nextButton = screen.getByLabelText('Next slide');
@@ -309,8 +309,8 @@ describe('Carousel Component', () => {
     });
   });
 
-  describe('Callbacks', () => {
-    it('calls onSlideChange when slide changes', async () => {
+  describe('콜백', () => {
+    it('슬라이드 변경 시 onSlideChange를 호출한다', async () => {
       const onSlideChange = jest.fn();
       renderCarousel({ onSlideChange });
       
@@ -322,7 +322,7 @@ describe('Carousel Component', () => {
       });
     });
 
-    it('calls onBeforeSlideChange before slide changes', async () => {
+    it('슬라이드 변경 전 onBeforeSlideChange를 호출한다', async () => {
       const onBeforeSlideChange = jest.fn();
       renderCarousel({ onBeforeSlideChange });
       
@@ -332,7 +332,7 @@ describe('Carousel Component', () => {
       expect(onBeforeSlideChange).toHaveBeenCalledWith(0, 1);
     });
 
-    it('calls onInit on component mount', () => {
+    it('컴포넌트 마운트 시 onInit을 호출한다', () => {
       const onInit = jest.fn();
       renderCarousel({ onInit });
       
@@ -340,8 +340,8 @@ describe('Carousel Component', () => {
     });
   });
 
-  describe('Focus Management', () => {
-    it('goes to slide when clicked and focusOnSelect is true', async () => {
+  describe('포커스 관리', () => {
+    it('focusOnSelect가 true일 때 클릭하면 해당 슬라이드로 이동한다', async () => {
       renderCarousel({ focusOnSelect: true, slidesToShow: 3 });
       
       const thirdSlide = screen.getByText('Slide 3');
@@ -355,8 +355,8 @@ describe('Carousel Component', () => {
     });
   });
 
-  describe('Vertical Direction', () => {
-    it('uses vertical arrow keys when direction is vertical', async () => {
+  describe('수직 방향', () => {
+    it('방향이 vertical일 때 수직 화살표 키를 사용한다', async () => {
       renderCarousel({ direction: 'vertical', keyboard: true });
       
       const carousel = screen.getByRole('region');
@@ -369,7 +369,7 @@ describe('Carousel Component', () => {
       });
     });
 
-    it('ignores horizontal arrow keys when direction is vertical', async () => {
+    it('방향이 vertical일 때 수평 화살표 키를 무시한다', async () => {
       renderCarousel({ direction: 'vertical', keyboard: true });
       
       const carousel = screen.getByRole('region');
@@ -382,15 +382,15 @@ describe('Carousel Component', () => {
     });
   });
 
-  describe('Animation Types', () => {
-    it('applies fade animation when animation is fade', () => {
+  describe('애니메이션 타입', () => {
+    it('animation이 fade일 때 페이드 애니메이션을 적용한다', () => {
       renderCarousel({ animation: 'fade' });
       
       // Check that the carousel is rendered (specific animation testing would require more complex setup)
       expect(screen.getByRole('region')).toBeInTheDocument();
     });
 
-    it('applies slide animation by default', () => {
+    it('기본적으로 슬라이드 애니메이션을 적용한다', () => {
       renderCarousel({ animation: 'slide' });
       
       expect(screen.getByRole('region')).toBeInTheDocument();
